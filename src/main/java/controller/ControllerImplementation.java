@@ -235,7 +235,7 @@ public class ControllerImplementation implements IController, ActionListener {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
         insert(p);
-        JOptionPane.showMessageDialog(menu, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+        JOptionPane.showMessageDialog(insert, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
         insert.getReset().doClick();
     }
 
