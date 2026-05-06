@@ -28,12 +28,26 @@ public class Update extends javax.swing.JDialog {
     public Update(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
+        setDatePickerButtonText(dateOfBirth, "Seleccionar una fecha");
+        
         setLocationRelativeTo(null);
         DropPhotoListener d = new DropPhotoListener(photo, this);
         DropTarget dropTarget = new DropTarget(photo, d);
         read.setVisible(false);
         update.setEnabled(false);
     }
+    
+    private void setDatePickerButtonText(java.awt.Container container, String text) {
+    for (java.awt.Component c : container.getComponents()) {
+        if (c instanceof javax.swing.JButton btn) {
+            btn.setText(text);
+            btn.setPreferredSize(null);
+        } else if (c instanceof java.awt.Container inner) {
+            setDatePickerButtonText(inner, text); // busca en niveles internos
+        }
+    }
+}
 
     public JButton getUpdate() {
         return update;
