@@ -378,6 +378,11 @@ public class ControllerImplementation implements IController, ActionListener {
                 } else {
                     model.setValueAt("no", i, 3);
                 }
+                if(s.get(i).getPhone() != null){
+                    model.setValueAt(s.get(i).getPhone(), i, 4);
+                }else{
+                    model.setValueAt("no", i, 4);
+                }
             }
             readAll.setVisible(true);
         }
