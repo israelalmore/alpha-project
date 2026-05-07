@@ -314,7 +314,6 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getUpdate().setEnabled(true);
                 }
             } else {
-                JOptionPane.showMessageDialog(update, p.getNif() + " doesn't exist.", update.getTitle(), JOptionPane.WARNING_MESSAGE);
                 update.getReset().doClick();
             }
         }
@@ -330,6 +329,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
             update(p);
+            JOptionPane.showMessageDialog(update, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
             update.getReset().doClick();
         }
     }
