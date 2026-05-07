@@ -22,12 +22,14 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import model.entity.PersonException;
 
 /**
  * This class implements the IDAO interface and completes the code of the
  * functions so that they can work with files. User data is saved in the
  * "dataFile.txt" file and the associated photos, if any, are saved with the
  * name NIF.png in the "Photos" folder.
+ *
  * @author Francesc Perez
  * @version 1.1.0
  */
@@ -54,7 +56,11 @@ public class DAOFile implements IDAO {
                 if (!data[3].equals("null")) {
                     photo = new ImageIcon(data[3]);
                 }
-                personToRead = new Person(data[0], data[1], date, photo);
+                String phone = null;
+                if (data.length >= 5 && !data[4].equals("null")) {
+                    phone = data[4];
+                }
+                personToRead = new Person(data[0], data[1], date, photo, phone);
                 break;
             }
             line = br.readLine();
@@ -62,9 +68,9 @@ public class DAOFile implements IDAO {
         br.close();
         return personToRead;
     }
-    
+
     @Override
-    public ArrayList<Person> readAll() throws FileNotFoundException, IOException, ParseException {
+    public ArrayList<Person> readAll() throws FileNotFoundException, IOException, ParseException, PersonException {
         ArrayList<Person> people = new ArrayList<>();
         FileReader fr;
         BufferedReader br;
@@ -83,7 +89,11 @@ public class DAOFile implements IDAO {
             if (!data[3].equals("null")) {
                 photo = new ImageIcon(data[3]);
             }
-            people.add(new Person(data[0], data[1], date, photo));
+            String phone = null;
+            if (data.length >= 5 && !data[4].equals("null")) {
+                phone = data[4];
+            }
+            people.add(new Person(data[0], data[1], date, photo, phone));
             line = br.readLine();
         }
         br.close();
@@ -107,7 +117,7 @@ public class DAOFile implements IDAO {
         if (p.getPhoto() != null) {
             FileOutputStream out;
             BufferedOutputStream outB;
-            String fileName = Routes.FILE.getFolderPhotos() + sep + p.getNif() + ".png";         
+            String fileName = Routes.FILE.getFolderPhotos() + sep + p.getNif() + ".png";
             out = new FileOutputStream(fileName);
             outB = new BufferedOutputStream(out);
             BufferedImage bi = new BufferedImage(p.getPhoto().getImage().getWidth(null),
@@ -124,7 +134,14 @@ public class DAOFile implements IDAO {
             }
             outB.flush();
             outB.close();
-            bw.write(fileName + "\n");
+            bw.write(fileName + "\t");
+        } else {
+            bw.write("null" + "\t");
+        }
+
+        if (p.getPhone() != null) {
+
+            bw.write(p.getPhone() + "\n");
         } else {
             bw.write("null" + "\n");
         }
@@ -147,15 +164,24 @@ public class DAOFile implements IDAO {
                             + ".png");
                     photoFile.delete();
                 }
-            } else {
-                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3]
+                
+            }else {
+                if(d.length>=5){
+                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4]
                         + "\n";
+                }else{
+                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] 
+                        + "\n";
+                    
+                }
+            
             }
         }
-        rafRW.setLength(0);
-        rafRW.writeBytes(textoNuevo);
-        rafRW.close();
+            rafRW.setLength(0);
+            rafRW.writeBytes(textoNuevo);
+            rafRW.close();
     }
+    
 
     @Override
     public void deleteAll() throws IOException {
@@ -163,10 +189,11 @@ public class DAOFile implements IDAO {
         file.delete();
         file.createNewFile();
         file = new File(Routes.FILE.getFolderPhotos());
-        for(File f : file.listFiles())
+        for (File f : file.listFiles()) {
             f.delete();
+        }
     }
-    
+
     @Override
     public void update(Person p) throws IOException {
         delete(p);

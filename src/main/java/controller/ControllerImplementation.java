@@ -185,7 +185,8 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "nif varchar(9) primary key not null, "
                         + "name varchar(50), "
                         + "dateOfBirth DATE, "
-                        + "photo varchar(200) );");
+                        + "photo varchar(200),"
+                        + "phone varchar(200));" );
                 stmt.close();
                 conn.close();
             }
@@ -233,6 +234,15 @@ public class ControllerImplementation implements IController, ActionListener {
         }
         if (insert.getPhoto().getIcon() != null) {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
+        }
+        if(!insert.getPhone().getText().isEmpty()){
+            try {
+            p.setPhone(insert.getPhone().getText());
+                    
+            } catch (PersonException ex) {
+                    JOptionPane.showMessageDialog(insert, ex.getMessage(), insert.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    return;
+            }
         }
         insert(p);
         JOptionPane.showMessageDialog(insert, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
@@ -313,6 +323,10 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhoto().setIcon(pNew.getPhoto());
                     update.getUpdate().setEnabled(true);
                 }
+                if(pNew.getPhone() != null){
+                    update.getPhone().setText(pNew.getPhone());
+                    update.getPhone().setEnabled(true);
+                }
             } else {
                 update.getReset().doClick();
             }
@@ -327,6 +341,15 @@ public class ControllerImplementation implements IController, ActionListener {
             }
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
+            }
+            if(!update.getPhone().getText().isEmpty()){
+                try {
+                p.setPhone(update.getPhone().getText());
+                    
+                } catch (PersonException ex) {
+                     JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
             }
             update(p);
             JOptionPane.showMessageDialog(update, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);

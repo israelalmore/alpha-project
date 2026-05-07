@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import model.entity.PersonException;
 
 /**
  * This class implements the IDAO interface and completes the function code
@@ -33,8 +34,8 @@ public class DAOSQL implements IDAO {
 
     private final String SQL_SELECT_ALL = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
-    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo) VALUES (?, ?, ?, ?);";
-    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? WHERE (nif = ?);";
+    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo, phone) VALUES (?, ?, ?, ?, ?);";
+    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? , phone = ? WHERE (nif = ?);";
     private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
 
@@ -49,7 +50,7 @@ public class DAOSQL implements IDAO {
     }
 
     @Override
-    public Person read(Person p) throws SQLException {
+    public Person read(Person p) throws SQLException, PersonException {
         Person pReturn = null;
         Connection conn;
         PreparedStatement instruction;
@@ -70,6 +71,10 @@ public class DAOSQL implements IDAO {
             if (photo != null) {
                 pReturn.setPhoto(new ImageIcon(photo));
             }
+            String phone = rs.getString("phone");
+            if (phone != null){
+                pReturn.setPhone(phone);
+            }
         }
         rs.close();
         instruction.close();
@@ -78,7 +83,7 @@ public class DAOSQL implements IDAO {
     }
 
     @Override
-    public ArrayList<Person> readAll() throws SQLException{
+    public ArrayList<Person> readAll() throws SQLException, PersonException{
         ArrayList<Person> people = new ArrayList<>();
         Connection conn;
         Statement instruction;
@@ -91,10 +96,11 @@ public class DAOSQL implements IDAO {
             String name = rs.getString("name");
             Date date = rs.getDate("dateOfBirth");
             String photo = rs.getString("photo");
+            String phone = rs.getString("phone");
             if (photo != null) {
-                people.add(new Person(nif, name, date, new ImageIcon(photo)));
+                people.add(new Person(nif, name, date, new ImageIcon(photo), phone));
             } else {
-                people.add(new Person(nif, name, date, null));
+                people.add(new Person(nif, name, date, null, phone));
             }
         }
         rs.close();
@@ -154,6 +160,12 @@ public class DAOSQL implements IDAO {
         } else {
             instruction.setString(4, null);
         }
+        if(p.getPhone() != null){
+            instruction.setString(5, p.getPhone());
+        }else{
+            instruction.setString(5, null);
+            
+        }
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
@@ -196,7 +208,12 @@ public class DAOSQL implements IDAO {
                     + ".png");
             photoFile.delete();
         }
-        instruction.setString(4, p.getNif());
+        if(p.getPhone() != null){
+            instruction.setString(4, p.getPhone());
+        }else{
+            instruction.setString(4,null);
+        }
+        instruction.setString(5, p.getNif());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
