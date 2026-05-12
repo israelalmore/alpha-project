@@ -233,6 +233,7 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
+        System.out.println("236");
         Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getEmail().getText());
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
@@ -241,7 +242,6 @@ public class ControllerImplementation implements IController, ActionListener {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
         insert(p);
-        JOptionPane.showMessageDialog(insert, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
         insert.getReset().doClick();
     }
 
@@ -400,7 +400,10 @@ public class ControllerImplementation implements IController, ActionListener {
     public void insert(Person p) {
         try {
             if (dao.read(p) == null) {
+                System.out.println("403");
                 dao.insert(p);
+                JOptionPane.showMessageDialog(insert, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("404");
             } else {
                 throw new PersonException(p.getNif() + " is registered and can not "
                         + "be INSERTED.");
