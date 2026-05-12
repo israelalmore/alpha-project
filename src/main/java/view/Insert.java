@@ -398,7 +398,7 @@ public class Insert extends javax.swing.JDialog {
         // TODO add your handling code here:
         
         if(!isNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE && evt.getKeyChar() != '-' && evt.getKeyChar() != '+' && evt.getKeyChar() != '.' && evt.getKeyChar() != ' '){
-            JOptionPane.showMessageDialog(this, "Type only numbers", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+            JOptionPane.showMessageDialog(this, "Type only numbers ", this.getTitle(), JOptionPane.ERROR_MESSAGE);
             evt.consume();
              }
     }//GEN-LAST:event_NumberPhoneKeyTyped

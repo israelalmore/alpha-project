@@ -74,7 +74,7 @@ public class Person implements Serializable {
     public String getPhone() {
         return phoneNumber;
     }
-    private final String phoneRegex = "^+?[0-9]{1,4}?[-.\\s]?(?:\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
+    private final String phoneRegex = "^\\d{9}$";
 
     public void setPhone(String phoneNumber) throws PersonException {
         if (phoneNumber == null || phoneNumber.isEmpty()) {
