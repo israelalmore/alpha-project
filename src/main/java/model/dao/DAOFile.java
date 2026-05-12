@@ -172,5 +172,10 @@ public class DAOFile implements IDAO {
         delete(p);
         insert(p);
     }
+    
+    @Override
+    public int count() throws Exception{
+        return readAll().size();
+    }
 
 }
