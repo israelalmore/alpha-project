@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
 import utils.Constants;
+import view.Count;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -59,6 +60,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Delete delete;
     private Update update;
     private ReadAll readAll;
+    private Count count;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -113,6 +115,8 @@ public class ControllerImplementation implements IController, ActionListener {
             handleReadAll();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
+        } else if (e.getSource() == menu.getCount()) {
+            handleCount();
         }
     }
 
@@ -218,6 +222,7 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getDelete().addActionListener(this);
         menu.getReadAll().addActionListener(this);
         menu.getDeleteAll().addActionListener(this);
+        menu.getCount().addActionListener(this);
     }
 
     private void handleInsertAction() {
@@ -534,4 +539,25 @@ public class ControllerImplementation implements IController, ActionListener {
         }
     }
 
+    private void handleCount() {
+        count = new Count(menu, true);
+        count.getCountPeople().setText(String.valueOf(count()));
+        count.setVisible(true);
+    }
+
+    @Override
+    public int count() {
+        try {
+            return dao.count();
+        } catch (Exception ex) {
+            if (ex instanceof FileNotFoundException || ex instanceof IOException
+                    || ex instanceof ParseException || ex instanceof ClassNotFoundException
+                    || ex instanceof SQLException || ex instanceof PersistenceException) {
+                JOptionPane.showMessageDialog(menu, ex.getMessage() + " Closing application.",
+                        "Count - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+            return 0;
+        }
+    }
 }
