@@ -5,7 +5,7 @@
 package utils;
 
 /**
- * @author Francesc Perez 
+ * @author Francesc Perez
  * @version 1.1.0
  */
 public class DataValidation {
@@ -18,13 +18,29 @@ public class DataValidation {
         //The name can contain uppercase and lowercase letters, whitespace, 
         //hyphens and code control
 //        return (97 <= c && c <= 122) || (65 <= c && c <= 90) || (c == 32) || (c == 45);
-        return Character.isLetter(c) || c==32 || c==45;
+        return Character.isLetter(c) || c == 32 || c == 45;
     }
 
     public static String calculateNifLetter(String nifNoLetter) {
-        String [] letter = {"T","R","W","A","G","M","Y","F","P","D","X","B",
-            "N","J","Z","S","Q","V","H","L","C","K","E"};
-        return nifNoLetter + letter[Integer.parseInt(nifNoLetter)%23];
+        String[] letter = {"T", "R", "W", "A", "G", "M", "Y", "F", "P", "D", "X", "B",
+            "N", "J", "Z", "S", "Q", "V", "H", "L", "C", "K", "E"};
+        return nifNoLetter + letter[Integer.parseInt(nifNoLetter) % 23];
+    }
+
+    public static boolean calculateEmail(char c) {
+        // Permite: letras, dígitos, y caracteres especiales válidos en un email
+        return Character.isLetterOrDigit(c)
+                || c == '@'
+                || c == '.'
+                || c == '_'
+                || c == '+'
+                || c == '&'
+                || c == '-';
+    }
+
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email != null && email.matches(emailRegex);
     }
 
 }

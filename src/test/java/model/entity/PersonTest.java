@@ -13,13 +13,14 @@ class PersonTest {
     private Person personWithFullData;
     private String nif = "12345678X";
     private String name = "John Doe";
+    private String email = "jaja@gmail.com";
     private Date dateOfBirth = new Date();
     private ImageIcon photo = new ImageIcon();
 
     @BeforeEach
     void setUp() {
         person = new Person(nif);
-        personWithFullData = new Person(name, nif, dateOfBirth, photo);
+        personWithFullData = new Person(name, nif, email, dateOfBirth, photo);
     }
 
     @Test
@@ -32,7 +33,7 @@ class PersonTest {
 
     @Test
     void testConstructorNameAndNif() {
-        Person personWithNameAndNif = new Person(name, nif);
+        Person personWithNameAndNif = new Person(name, nif, email);
         assertEquals(name, personWithNameAndNif.getName());
         assertEquals(nif, personWithNameAndNif.getNif());
     }
@@ -94,7 +95,7 @@ class PersonTest {
 
     @Test
     void testToString() {
-        String expected = "Person {Name = " + name + ", NIF = " + nif
+        String expected = "Person {Name = " + name + ", NIF = " + nif + ", email = " + email
                 + ", DateOfBirth = " + dateOfBirth + ", Photo = true}";
         assertEquals(expected, personWithFullData.toString());
     }

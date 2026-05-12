@@ -33,8 +33,8 @@ public class DAOSQL implements IDAO {
 
     private final String SQL_SELECT_ALL = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
-    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, dateOfBirth, photo) VALUES (?, ?, ?, ?);";
-    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, dateOfBirth = ?, photo = ? WHERE (nif = ?);";
+    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, email, dateOfBirth, photo) VALUES (?, ?, ?, ?, ?);";
+    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, email = ?, dateOfBirth = ?, photo = ? WHERE (nif = ?);";
     private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
     private final String SQL_COUNT = "SELECT COUNT(*) FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
@@ -62,7 +62,8 @@ public class DAOSQL implements IDAO {
         while (rs.next()) {
             String nif = rs.getString("nif");
             String name = rs.getString("name");
-            pReturn = new Person(name, nif);
+            String email = rs.getString("email");
+            pReturn = new Person(name, nif, email);
             Date date = rs.getDate("dateOfBirth");
             if (date != null) {
                 pReturn.setDateOfBirth(date);
@@ -90,12 +91,13 @@ public class DAOSQL implements IDAO {
         while (rs.next()) {
             String nif = rs.getString("nif");
             String name = rs.getString("name");
+            String email = rs.getString("email");
             Date date = rs.getDate("dateOfBirth");
             String photo = rs.getString("photo");
             if (photo != null) {
-                people.add(new Person(nif, name, date, new ImageIcon(photo)));
+                people.add(new Person(nif, name, email, date, new ImageIcon(photo)));
             } else {
-                people.add(new Person(nif, name, date, null));
+                people.add(new Person(nif, name, email, date, null));
             }
         }
         rs.close();
