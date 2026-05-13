@@ -278,6 +278,10 @@ public class ControllerImplementation implements IController, ActionListener {
                 pNew.getPhoto().getImage().flush();
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
+            
+            if(pNew.getPhone() != null){
+                read.getPhone().setText(pNew.getPhone());
+            }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
             read.getReset().doClick();
@@ -374,7 +378,7 @@ public class ControllerImplementation implements IController, ActionListener {
             readAll = new ReadAll(menu, true);
             DefaultTableModel model = (DefaultTableModel) readAll.getTable().getModel();
             for (int i = 0; i < s.size(); i++) {
-                model.addRow(new Object[i]);
+                model.addRow(new Object[6]);
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
                 model.setValueAt(s.get(i).getEmail(), i, 2);
@@ -389,9 +393,9 @@ public class ControllerImplementation implements IController, ActionListener {
                     model.setValueAt("no", i, 4);
                 }
                 if(s.get(i).getPhone() != null){
-                    model.setValueAt(s.get(i).getPhone(), i, 4);
+                    model.setValueAt(s.get(i).getPhone(), i, 5);
                 }else{
-                    model.setValueAt("", i, 4);
+                    model.setValueAt("", i, 5);
                 }
             }
             readAll.setVisible(true);

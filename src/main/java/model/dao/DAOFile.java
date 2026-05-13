@@ -50,7 +50,7 @@ public class DAOFile implements IDAO {
                 Date date = null;
                 if (!data[3].equals("null")) {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                    date = dateFormat.parse(data[2]);
+                    date = dateFormat.parse(data[3]);
                 }
                 ImageIcon photo = null;
                 if (!data[4].equals("null")) {
@@ -85,7 +85,7 @@ public class DAOFile implements IDAO {
             Date date = null;
             if (!data[3].equals("null")) {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-                date = dateFormat.parse(data[2]);
+                date = dateFormat.parse(data[3]);
             }
             ImageIcon photo = null;
             if (!data[4].equals("null")) {
