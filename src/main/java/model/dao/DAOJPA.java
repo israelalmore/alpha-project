@@ -16,6 +16,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import model.entity.PersonException;
 
 /**
  * This class implements the IDAO interface and completes the function code
@@ -109,17 +111,29 @@ public class DAOJPA implements IDAO {
         Person pC = em.find(Person.class, p.getNif());
         if (pC != null) {
             pC.setName(p.getName());
+            pC.setEmail(p.getEmail());
             pC.setDateOfBirth(p.getDateOfBirth());
-            if(p.getPhoto() != null)
+            if (p.getPhoto() != null) {
                 pC.setPhotoOnlyJPA(imageIconToBytes(p.getPhoto()));
-            else   
+
+        } else {  
                 pC.setPhotoOnlyJPA(null);
-            if(p.getPhone() != null)
+        }
+            if(p.getPhone() != null){
+                try {
                 pC.setPhone(p.getPhone());
+                    
+                } catch (PersonException e) {
+                   throw new PersonException(e.getMessage());
+                }
+                
+
+        }
         }
         em.getTransaction().commit();
         em.close();
     }
+    
 
     @Override
     public void delete(Person p) throws Exception {
@@ -132,6 +146,7 @@ public class DAOJPA implements IDAO {
             em.remove(pR);
         }
         em.getTransaction().commit();
+        em.close();
     }
 
     @Override
@@ -144,6 +159,16 @@ public class DAOJPA implements IDAO {
             em.remove(pR);
         }
         em.getTransaction().commit();
+        em.close();
+    }
+
+    @Override
+    public int count() throws Exception {
+        EntityManager em = emf.createEntityManager();
+        Long total = em.createQuery("SELECT COUNT(p) FROM Person p", Long.class)
+                .getSingleResult();
+        em.close();
+        return total.intValue();
     }
 
 }

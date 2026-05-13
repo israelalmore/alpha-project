@@ -14,18 +14,21 @@ class PersonTest {
     private Person personWithFullData;
     private String nif = "12345678X";
     private String name = "John Doe";
+    private String email = "jaja@gmail.com";
     private Date dateOfBirth = new Date();
     private ImageIcon photo = new ImageIcon();
-    private String phoneNumber = "+34 612 345 678";
+    private String phoneNumber = "612345678";
 
     @BeforeEach
     void setUp() {
         person = new Person(nif);
+
         try {
-            personWithFullData = new Person(name, nif, dateOfBirth, photo, phoneNumber);
+            personWithFullData = new Person(name, nif, email, dateOfBirth, photo, phoneNumber);
         } catch (PersonException e) {
             fail("Setup failed: " + e.getMessage());
         }
+
     }
 
     @Test
@@ -38,7 +41,7 @@ class PersonTest {
 
     @Test
     void testConstructorNameAndNif() {
-        Person personWithNameAndNif = new Person(name, nif);
+        Person personWithNameAndNif = new Person(name, nif, email);
         assertEquals(name, personWithNameAndNif.getName());
         assertEquals(nif, personWithNameAndNif.getNif());
     }
@@ -101,16 +104,16 @@ void testConstructorFullData() {
 
     @Test
     void testToString() {
-        String expected = "Person {Name = " + name + ", NIF = " + nif
-                + ", DateOfBirth = " + dateOfBirth + ", Photo = true}";
+        String expected = "Person {Name = " + name + ", NIF = " + nif + ", email = " + email
+                + ", DateOfBirth = " + dateOfBirth + ", Photo = true" + ", Phone = true }";
         assertEquals(expected, personWithFullData.toString());
     }
     
     @Test
 void testSetPhoneValid() {
     try {
-        person.setPhone("+34 612 345 678");
-        assertEquals("+34 612 345 678", person.getPhone());
+        person.setPhone("612345678");
+        assertEquals("612345678", person.getPhone());
     } catch (PersonException e) {
         fail("Should not throw exception for valid phone: " + e.getMessage());
     }

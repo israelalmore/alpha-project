@@ -1,1 +1,5 @@
+<<<<<<< HEAD
 gerson	12345678Z	null	null	983949289213
+=======
+"Enter full name"	12345678Z	s@s.com	null	null
+>>>>>>> 5917d44850f5800740fe788ee6621456ef9e23f4

@@ -38,6 +38,7 @@ import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import org.jdatepicker.DateModel;
 import utils.Constants;
+import view.Count;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -59,6 +60,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private Delete delete;
     private Update update;
     private ReadAll readAll;
+    private Count count;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -113,6 +115,8 @@ public class ControllerImplementation implements IController, ActionListener {
             handleReadAll();
         } else if (e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
+        } else if (e.getSource() == menu.getCount()) {
+            handleCount();
         }
     }
 
@@ -184,6 +188,7 @@ public class ControllerImplementation implements IController, ActionListener {
                 stmt.executeUpdate("create table if not exists " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + "("
                         + "nif varchar(9) primary key not null, "
                         + "name varchar(50), "
+                        + "email varchar(100),"
                         + "dateOfBirth DATE, "
                         + "photo varchar(200),"
                         + "phone varchar(200));" );
@@ -219,6 +224,7 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getDelete().addActionListener(this);
         menu.getReadAll().addActionListener(this);
         menu.getDeleteAll().addActionListener(this);
+        menu.getCount().addActionListener(this);
     }
 
     private void handleInsertAction() {
@@ -228,7 +234,8 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void handleInsertPerson() {
-        Person p = new Person(insert.getNam().getText(), insert.getNif().getText());
+        System.out.println("236");
+        Person p = new Person(insert.getNam().getText(), insert.getNif().getText(), insert.getEmail().getText());
         if (insert.getDateOfBirth().getModel().getValue() != null) {
             p.setDateOfBirth(((GregorianCalendar) insert.getDateOfBirth().getModel().getValue()).getTime());
         }
@@ -245,7 +252,6 @@ public class ControllerImplementation implements IController, ActionListener {
             }
         }
         insert(p);
-        JOptionPane.showMessageDialog(insert, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
         insert.getReset().doClick();
     }
 
@@ -260,6 +266,7 @@ public class ControllerImplementation implements IController, ActionListener {
         Person pNew = read(p);
         if (pNew != null) {
             read.getNam().setText(pNew.getName());
+            read.getEmail().setText(pNew.getEmail());
             if (pNew.getDateOfBirth() != null) {
                 Calendar calendar = Calendar.getInstance();
                 calendar.setTime(pNew.getDateOfBirth());
@@ -308,10 +315,12 @@ public class ControllerImplementation implements IController, ActionListener {
             Person pNew = read(p);
             if (pNew != null) {
                 update.getNam().setEnabled(true);
+                update.getEmail().setEnabled(true);
                 update.getDateOfBirth().setEnabled(true);
                 update.getPhoto().setEnabled(true);
                 update.getUpdate().setEnabled(true);
                 update.getNam().setText(pNew.getName());
+                update.getEmail().setText(pNew.getEmail());
                 if (pNew.getDateOfBirth() != null) {
                     Calendar calendar = Calendar.getInstance();
                     calendar.setTime(pNew.getDateOfBirth());
@@ -335,7 +344,7 @@ public class ControllerImplementation implements IController, ActionListener {
 
     public void handleUpdatePerson() {
         if (update != null) {
-            Person p = new Person(update.getNam().getText(), update.getNif().getText());
+            Person p = new Person(update.getNam().getText(), update.getNif().getText(), update.getEmail().getText());
             if ((update.getDateOfBirth().getModel().getValue()) != null) {
                 p.setDateOfBirth(((GregorianCalendar) update.getDateOfBirth().getModel().getValue()).getTime());
             }
@@ -368,15 +377,16 @@ public class ControllerImplementation implements IController, ActionListener {
                 model.addRow(new Object[i]);
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
+                model.setValueAt(s.get(i).getEmail(), i, 2);
                 if (s.get(i).getDateOfBirth() != null) {
-                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 2);
+                    model.setValueAt(s.get(i).getDateOfBirth().toString(), i, 3);
                 } else {
-                    model.setValueAt("", i, 2);
+                    model.setValueAt("", i, 3);
                 }
                 if (s.get(i).getPhoto() != null) {
-                    model.setValueAt("yes", i, 3);
+                    model.setValueAt("yes", i, 4);
                 } else {
-                    model.setValueAt("no", i, 3);
+                    model.setValueAt("no", i, 4);
                 }
                 if(s.get(i).getPhone() != null){
                     model.setValueAt(s.get(i).getPhone(), i, 4);
@@ -418,7 +428,10 @@ public class ControllerImplementation implements IController, ActionListener {
     public void insert(Person p) {
         try {
             if (dao.read(p) == null) {
+                System.out.println("403");
                 dao.insert(p);
+                JOptionPane.showMessageDialog(insert, "Person inserted succesfully!", "Insert - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
+                System.out.println("404");
             } else {
                 throw new PersonException(p.getNif() + " is registered and can not "
                         + "be INSERTED.");
@@ -562,4 +575,25 @@ public class ControllerImplementation implements IController, ActionListener {
         }
     }
 
+    private void handleCount() {
+        count = new Count(menu, true);
+        count.getCountPeople().setText(String.valueOf(count()));
+        count.setVisible(true);
+    }
+
+    @Override
+    public int count() {
+        try {
+            return dao.count();
+        } catch (Exception ex) {
+            if (ex instanceof FileNotFoundException || ex instanceof IOException
+                    || ex instanceof ParseException || ex instanceof ClassNotFoundException
+                    || ex instanceof SQLException || ex instanceof PersistenceException) {
+                JOptionPane.showMessageDialog(menu, ex.getMessage() + " Closing application.",
+                        "Count - People v1.1.0", JOptionPane.ERROR_MESSAGE);
+                System.exit(0);
+            }
+            return 0;
+        }
+    }
 }

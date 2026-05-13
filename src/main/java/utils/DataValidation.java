@@ -29,10 +29,26 @@ public class DataValidation {
         return nifNoLetter + letter[Integer.parseInt(nifNoLetter) % 23];
     }
 
+    public static boolean calculateEmail(char c) {
+        // Permite: letras, dígitos, y caracteres especiales válidos en un email
+        return Character.isLetterOrDigit(c)
+                || c == '@'
+                || c == '.'
+                || c == '_'
+                || c == '+'
+                || c == '&'
+                || c == '-';
+    }
+
+    public static boolean isValidEmail(String email) {
+        String emailRegex = "^[a-zA-Z0-9_+&-]+(?:\\.[a-zA-Z0-9_+&-]+)*@(?:[a-zA-Z0-9-]+\\.)+[a-zA-Z]{2,7}$";
+        return email != null && email.matches(emailRegex);
+    }
+
     public static boolean isValidPhone(String phone) {
         String phoneRegex = "^\\d{9}$";
 
-        return phone.matches(phoneRegex);
+        return phone != null && phone.matches(phoneRegex);
 
     }
 }

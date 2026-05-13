@@ -48,19 +48,21 @@ public class DAOFile implements IDAO {
             String data[] = line.split("\t");
             if (data[1].equals(p.getNif())) {
                 Date date = null;
-                if (!data[2].equals("null")) {
+                if (!data[3].equals("null")) {
                     DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                     date = dateFormat.parse(data[2]);
                 }
                 ImageIcon photo = null;
-                if (!data[3].equals("null")) {
-                    photo = new ImageIcon(data[3]);
+                if (!data[4].equals("null")) {
+                    photo = new ImageIcon(data[4]);
                 }
+
                 String phone = null;
-                if (data.length >= 5 && !data[4].equals("null")) {
-                    phone = data[4];
+                if (data.length >= 6 && !data[5].equals("null")) {
+                    phone = data[5];
                 }
-                personToRead = new Person(data[0], data[1], date, photo, phone);
+                personToRead = new Person(data[0], data[1], data[2], date, photo, phone);
+
                 break;
             }
             line = br.readLine();
@@ -81,19 +83,21 @@ public class DAOFile implements IDAO {
         while (line != null) {
             String data[] = line.split("\t");
             Date date = null;
-            if (!data[2].equals("null")) {
+            if (!data[3].equals("null")) {
                 DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
                 date = dateFormat.parse(data[2]);
             }
             ImageIcon photo = null;
-            if (!data[3].equals("null")) {
-                photo = new ImageIcon(data[3]);
+            if (!data[4].equals("null")) {
+                photo = new ImageIcon(data[4]);
             }
+
             String phone = null;
-            if (data.length >= 5 && !data[4].equals("null")) {
-                phone = data[4];
+            if (data.length >= 6 && !data[5].equals("null")) {
+                phone = data[5];
             }
-            people.add(new Person(data[0], data[1], date, photo, phone));
+            people.add(new Person(data[0], data[1], data[2], date, photo, phone));
+
             line = br.readLine();
         }
         br.close();
@@ -108,11 +112,11 @@ public class DAOFile implements IDAO {
         fw = new FileWriter(Routes.FILE.getDataFile(), true);
         bw = new BufferedWriter(fw);
         if (p.getDateOfBirth() != null) {
-            DateFormat dateFormat = new SimpleDateFormat("yyy/MM/dd");
+            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String dateAsString = dateFormat.format(p.getDateOfBirth());
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + dateAsString + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + p.getEmail() +"\t" + dateAsString + "\t");
         } else {
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + "null" + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + p.getEmail() +  "\t" + "null" + "\t");
         }
         if (p.getPhoto() != null) {
             FileOutputStream out;
@@ -159,18 +163,20 @@ public class DAOFile implements IDAO {
             String l = rafRW.readLine();
             String d[] = l.split("\t");
             if (p.getNif().equals(d[1])) {
-                if (!d[3].equals("null")) {
+                if (!d[4].equals("null")) {
                     File photoFile = new File(Routes.FILE.getFolderPhotos() + sep + p.getNif()
                             + ".png");
                     photoFile.delete();
                 }
+
                 
             }else {
-                if(d.length>=5){
-                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4]
+                if(d.length>=6){
+
+                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4] + "\t" + d[5]
                         + "\n";
                 }else{
-                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] 
+                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4] + "\t" + "null"
                         + "\n";
                     
                 }
@@ -198,6 +204,11 @@ public class DAOFile implements IDAO {
     public void update(Person p) throws IOException {
         delete(p);
         insert(p);
+    }
+    
+    @Override
+    public int count() throws Exception{
+        return readAll().size();
     }
 
 }

@@ -22,6 +22,7 @@
     <AuxValue name="FormSettings_listenerGenerationStyle" type="java.lang.Integer" value="0"/>
     <AuxValue name="FormSettings_variablesLocal" type="java.lang.Boolean" value="false"/>
     <AuxValue name="FormSettings_variablesModifier" type="java.lang.Integer" value="2"/>
+
   </AuxValues>
 
   <Layout>
@@ -139,6 +140,7 @@
           <Dimension value="[194, 33]"/>
         </Property>
       </Properties>
+
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel1">
       <Properties>
@@ -156,6 +158,7 @@
           <Dimension value="[100, 22]"/>
         </Property>
       </Properties>
+
     </Component>
     <Component class="javax.swing.JTextField" name="nif">
       <Properties>
@@ -175,6 +178,7 @@
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nifKeyReleased"/>
         <EventHandler event="keyTyped" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nifKeyTyped"/>
       </Events>
+
     </Component>
     <Component class="javax.swing.JLabel" name="photo">
       <Properties>
@@ -202,6 +206,7 @@
       <Events>
         <EventHandler event="mouseClicked" listener="java.awt.event.MouseListener" parameters="java.awt.event.MouseEvent" handler="photoMouseClicked"/>
       </Events>
+
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel3">
       <Properties>
@@ -219,6 +224,7 @@
           <Dimension value="[100, 22]"/>
         </Property>
       </Properties>
+
     </Component>
     <Component class="javax.swing.JTextField" name="NumberPhone">
       <Properties>
@@ -238,6 +244,7 @@
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="NumberPhoneKeyPressed"/>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="NumberPhoneKeyReleased"/>
       </Events>
+
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel8">
       <Properties>
@@ -255,6 +262,7 @@
           <Dimension value="[150, 22]"/>
         </Property>
       </Properties>
+
     </Component>
     <Component class="org.jdatepicker.JDatePicker" name="dateOfBirth">
       <Properties>
@@ -269,6 +277,7 @@
           <Dimension value="[350, 22]"/>
         </Property>
       </Properties>
+
     </Component>
     <Component class="javax.swing.JButton" name="reset">
       <Properties>
@@ -289,6 +298,7 @@
       <Events>
         <EventHandler event="actionPerformed" listener="java.awt.event.ActionListener" parameters="java.awt.event.ActionEvent" handler="resetActionPerformed"/>
       </Events>
+
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel2">
       <Properties>
@@ -298,17 +308,21 @@
         <Property name="horizontalAlignment" type="int" value="0"/>
         <Property name="text" type="java.lang.String" value="Author: francesc.perez@stucom.com - Version 1.1.0"/>
       </Properties>
+
     </Component>
     <Component class="javax.swing.JButton" name="read">
       <Properties>
         <Property name="text" type="java.lang.String" value="readnoVisible"/>
       </Properties>
+
     </Component>
     <Component class="javax.swing.JLabel" name="jLabel9">
+
       <Properties>
         <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
           <Font name="Segoe UI" size="18" style="1"/>
         </Property>
+
         <Property name="text" type="java.lang.String" value="Number Phone"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
           <Dimension value="[150, 22]"/>
@@ -322,6 +336,7 @@
       </Properties>
     </Component>
     <Component class="javax.swing.JTextField" name="name">
+
       <Properties>
         <Property name="enabled" type="boolean" value="false"/>
         <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
@@ -335,9 +350,46 @@
         </Property>
       </Properties>
       <Events>
+
         <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameKeyPressed"/>
         <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="nameKeyReleased"/>
       </Events>
+
     </Component>
+<Component class="javax.swing.JLabel" name="jLabel4">
+  <Properties>
+    <Property name="font" type="java.awt.Font" editor="org.netbeans.beaninfo.editors.FontEditor">
+      <Font name="Segoe UI" size="18" style="1"/>
+    </Property>
+    <Property name="text" type="java.lang.String" value="Email"/>
+    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[100, 22]"/>
+    </Property>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[100, 22]"/>
+    </Property>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[100, 22]"/>
+    </Property>
+  </Properties>
+</Component>
+<Component class="javax.swing.JTextField" name="email">
+  <Properties>
+    <Property name="enabled" type="boolean" value="false"/>
+    <Property name="maximumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[400, 22]"/>
+    </Property>
+    <Property name="minimumSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[400, 22]"/>
+    </Property>
+    <Property name="preferredSize" type="java.awt.Dimension" editor="org.netbeans.beaninfo.editors.DimensionEditor">
+      <Dimension value="[400, 22]"/>
+    </Property>
+  </Properties>
+  <Events>
+    <EventHandler event="keyPressed" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="emailKeyPressed"/>
+    <EventHandler event="keyReleased" listener="java.awt.event.KeyListener" parameters="java.awt.event.KeyEvent" handler="emailKeyReleased"/>
+  </Events>
+</Component>
   </SubComponents>
 </Form>

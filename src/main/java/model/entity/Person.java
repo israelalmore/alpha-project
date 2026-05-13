@@ -22,6 +22,7 @@ public class Person implements Serializable {
     @Id
     private String nif;
     private String name;
+    private String email;
     private Date dateOfBirth;
     @Transient
     private ImageIcon photo;
@@ -48,9 +49,10 @@ public class Person implements Serializable {
      * @author Fran Perez
      * @version 1.0
      */
-    public Person(String name, String nif) {
+    public Person(String name, String nif, String email) {
         this.name = name;
         this.nif = nif;
+        this.email = email;
     }
 
     /**
@@ -60,12 +62,15 @@ public class Person implements Serializable {
      * @version 1.0
      * @param name
      * @param nif
+     * @param email
      * @param dateOfBirth
      * @param photo
      */
-    public Person(String name, String nif, Date dateOfBirth, ImageIcon photo, String phoneNumber) throws PersonException {
+
+    public Person(String name, String nif, String email, Date dateOfBirth, ImageIcon photo, String phoneNumber) throws PersonException {
         this.name = name;
         this.nif = nif;
+        this.email = email;
         this.dateOfBirth = dateOfBirth;
         this.photo = photo;
         setPhone(phoneNumber);
@@ -101,6 +106,14 @@ public class Person implements Serializable {
 
     public void setNif(String nif) {
         this.nif = nif;
+    }
+
+    public String getEmail() {
+        return email;
+    }
+
+    public void setEmail(String email) {
+        this.email = email;
     }
 
     public Date getDateOfBirth() {
@@ -170,8 +183,10 @@ public class Person implements Serializable {
      */
     @Override
     public String toString() {
-        return "Person {" + "Name = " + name + ", NIF = " + nif
-                + ", DateOfBirth = " + dateOfBirth + ", Photo = " + (photo != null) + ", Phone= " + (phoneNumber != null) + " }";
+        return "Person {" + "Name = " + name + ", NIF = " + nif + ", email = " + email
+
+                + ", DateOfBirth = " + dateOfBirth + ", Photo = " + (photo != null) + ", Phone = " + (phoneNumber != null) + " }";
+
     }
 
 }

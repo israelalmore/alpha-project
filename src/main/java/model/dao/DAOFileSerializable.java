@@ -41,8 +41,8 @@ public class DAOFileSerializable implements IDAO {
             o.close();
         } catch (java.io.EOFException ex) {
             //Do nothing
-//            System.out.println("El archivo está vacío y no se puede crear"
-//                    + "el objeto ObjectInputStream");
+            System.out.println("El archivo está vacío y no se puede crear"
+                    + "el objeto ObjectInputStream");
         } finally {
             if (o != null) {
                 o.close();
@@ -60,7 +60,7 @@ public class DAOFileSerializable implements IDAO {
         ObjectInputStream ois = null;
         FileInputStream fIS = null;
         try {
-            
+
             fIS = new FileInputStream(Routes.FILES.getDataFile());
             ois = new ObjectInputStream(fIS);
             Person pr;
@@ -80,7 +80,7 @@ public class DAOFileSerializable implements IDAO {
                 fIS.close();
             }
         }
-        
+
         return people;
     }
 
@@ -102,7 +102,7 @@ public class DAOFileSerializable implements IDAO {
             //Do nothing
 //            System.out.println("El archivo está vacío y no se puede crear"
 //                    + "el objeto ObjectInputStream");
-        }finally {
+        } finally {
             if (ois != null) {
                 ois.close();
             }
@@ -134,11 +134,13 @@ public class DAOFileSerializable implements IDAO {
         FileInputStream fIS = null;
         ObjectInputStream ois = null;
         try {
+            System.out.println("137");
             fIS = new FileInputStream(Routes.FILES.getDataFile());
             ois = new ObjectInputStream(fIS);
             Person pr;
             while ((pr = (Person) ois.readObject()) != null) {
                 personRead.add(pr);
+                System.out.println("143");
             }
         } catch (java.io.EOFException ex) {
             //Do nothing
@@ -167,9 +169,14 @@ public class DAOFileSerializable implements IDAO {
     }
 
     @Override
-    public void update(Person p) throws FileNotFoundException, IOException, ClassNotFoundException{
+    public void update(Person p) throws FileNotFoundException, IOException, ClassNotFoundException {
         delete(p);
         insert(p);
+    }
+
+    @Override
+    public int count() throws Exception {
+        return readAll().size();
     }
 
 }
