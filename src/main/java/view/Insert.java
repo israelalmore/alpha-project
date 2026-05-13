@@ -348,8 +348,8 @@ public class Insert extends javax.swing.JDialog {
 
     private void showInsert() {
         boolean emailOk = email.getText().isEmpty() || isValidEmail(email.getText());
-
-        if (!name.getText().isEmpty() && !nif.isEditable() && emailOk) {
+        boolean phoneOk = NumberPhone.getText().isEmpty() || isValidPhone(NumberPhone.getText());
+        if (!name.getText().isEmpty() && !nif.isEditable() && emailOk && phoneOk) {
             insert.setEnabled(true);
         } else {
             insert.setEnabled(false);
@@ -428,7 +428,7 @@ public class Insert extends javax.swing.JDialog {
 
     private void NumberPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NumberPhoneKeyReleased
         // TODO add your handling code here:
-        
+        showInsert();
     }//GEN-LAST:event_NumberPhoneKeyReleased
 
     private void NumberPhoneKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NumberPhoneKeyTyped
