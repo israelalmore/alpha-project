@@ -20,6 +20,7 @@ import java.util.ArrayList;
 import java.util.Date;
 import javax.imageio.ImageIO;
 import javax.swing.ImageIcon;
+import model.entity.PersonException;
 
 /**
  * This class implements the IDAO interface and completes the function code
@@ -33,8 +34,11 @@ public class DAOSQL implements IDAO {
 
     private final String SQL_SELECT_ALL = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
-    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, email, dateOfBirth, photo) VALUES (?, ?, ?, ?, ?);";
-    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, email = ?, dateOfBirth = ?, photo = ? WHERE (nif = ?);";
+
+    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, email, dateOfBirth, photo, phone) VALUES (?, ?, ?, ?, ?, ?);";
+    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, email = ?, dateOfBirth = ?, photo = ? , phone = ? WHERE (nif = ?);";
+
+
     private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
     private final String SQL_COUNT = "SELECT COUNT(*) FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
@@ -50,7 +54,7 @@ public class DAOSQL implements IDAO {
     }
 
     @Override
-    public Person read(Person p) throws SQLException {
+    public Person read(Person p) throws SQLException, PersonException {
         Person pReturn = null;
         Connection conn;
         PreparedStatement instruction;
@@ -72,6 +76,10 @@ public class DAOSQL implements IDAO {
             if (photo != null) {
                 pReturn.setPhoto(new ImageIcon(photo));
             }
+            String phone = rs.getString("phone");
+            if (phone != null){
+                pReturn.setPhone(phone);
+            }
         }
         rs.close();
         instruction.close();
@@ -80,7 +88,9 @@ public class DAOSQL implements IDAO {
     }
 
     @Override
-    public ArrayList<Person> readAll() throws SQLException {
+
+    public ArrayList<Person> readAll() throws SQLException, PersonException{
+
         ArrayList<Person> people = new ArrayList<>();
         Connection conn;
         Statement instruction;
@@ -94,10 +104,13 @@ public class DAOSQL implements IDAO {
             String email = rs.getString("email");
             Date date = rs.getDate("dateOfBirth");
             String photo = rs.getString("photo");
+            String phone = rs.getString("phone");
             if (photo != null) {
-                people.add(new Person(nif, name, email, date, new ImageIcon(photo)));
+
+                people.add(new Person(nif, name, email, date, new ImageIcon(photo), phone));
             } else {
-                people.add(new Person(nif, name, email, date, null));
+                people.add(new Person(nif, name, email, date, null, phone));
+
             }
         }
         rs.close();
@@ -129,10 +142,11 @@ public class DAOSQL implements IDAO {
         instruction = conn.prepareStatement(SQL_INSERT);
         instruction.setString(1, p.getNif());
         instruction.setString(2, p.getName());
+        instruction.setString(3, p.getEmail());
         if (p.getDateOfBirth() != null) {
-            instruction.setDate(3, new java.sql.Date((p.getDateOfBirth()).getTime()));
+            instruction.setDate(4, new java.sql.Date((p.getDateOfBirth()).getTime()));
         } else {
-            instruction.setDate(3, null);
+            instruction.setDate(4, null);
         }
         if (p.getPhoto() != null) {
             String sep = File.separator;
@@ -153,9 +167,15 @@ public class DAOSQL implements IDAO {
                 outB.write(img[i]);
             }
             outB.close();
-            instruction.setString(4, photo.getPath());
+            instruction.setString(5, photo.getPath());
         } else {
-            instruction.setString(4, null);
+            instruction.setString(5, null);
+        }
+        if(p.getPhone() != null){
+            instruction.setString(6, p.getPhone());
+        }else{
+            instruction.setString(6, null);
+            
         }
         instruction.executeUpdate();
         instruction.close();
@@ -169,10 +189,11 @@ public class DAOSQL implements IDAO {
         conn = connect();
         instruction = conn.prepareStatement(SQL_UPDATE);
         instruction.setString(1, p.getName());
+        instruction.setString(2, p.getEmail());
         if (p.getDateOfBirth() != null) {
-            instruction.setDate(2, new java.sql.Date((p.getDateOfBirth()).getTime()));
+            instruction.setDate(3, new java.sql.Date((p.getDateOfBirth()).getTime()));
         } else {
-            instruction.setDate(2, null);
+            instruction.setDate(3, null);
         }
         if (p.getPhoto() != null) {
             String sep = File.separator;
@@ -192,14 +213,19 @@ public class DAOSQL implements IDAO {
                 outB.write(img[i]);
             }
             outB.close();
-            instruction.setString(3, imagePerson.getPath());
+            instruction.setString(4, imagePerson.getPath());
         } else {
-            instruction.setString(3, null);
+            instruction.setString(4, null);
             File photoFile = new File(Routes.DB.getFolderPhotos() + File.separator + p.getNif()
                     + ".png");
             photoFile.delete();
         }
-        instruction.setString(4, p.getNif());
+        if(p.getPhone() != null){
+            instruction.setString(5, p.getPhone());
+        }else{
+            instruction.setString(5,null);
+        }
+        instruction.setString(6, p.getNif());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);

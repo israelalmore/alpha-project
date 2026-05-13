@@ -190,7 +190,8 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "name varchar(50), "
                         + "email varchar(100),"
                         + "dateOfBirth DATE, "
-                        + "photo varchar(200) );");
+                        + "photo varchar(200),"
+                        + "phone varchar(200));" );
                 stmt.close();
                 conn.close();
             }
@@ -241,6 +242,15 @@ public class ControllerImplementation implements IController, ActionListener {
         if (insert.getPhoto().getIcon() != null) {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
+        if(!insert.getPhone().getText().isEmpty()){
+            try {
+            p.setPhone(insert.getPhone().getText());
+                    
+            } catch (PersonException ex) {
+                    JOptionPane.showMessageDialog(insert, ex.getMessage(), insert.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    return;
+            }
+        }
         insert(p);
         insert.getReset().doClick();
     }
@@ -267,6 +277,10 @@ public class ControllerImplementation implements IController, ActionListener {
             if (pNew.getPhoto() != null) {
                 pNew.getPhoto().getImage().flush();
                 read.getPhoto().setIcon(pNew.getPhoto());
+            }
+            
+            if(pNew.getPhone() != null){
+                read.getPhone().setText(pNew.getPhone());
             }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -322,6 +336,10 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhoto().setIcon(pNew.getPhoto());
                     update.getUpdate().setEnabled(true);
                 }
+                if(pNew.getPhone() != null){
+                    update.getPhone().setText(pNew.getPhone());
+                    update.getPhone().setEnabled(true);
+                }
             } else {
                 update.getReset().doClick();
             }
@@ -337,6 +355,15 @@ public class ControllerImplementation implements IController, ActionListener {
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
+            if(!update.getPhone().getText().isEmpty()){
+                try {
+                p.setPhone(update.getPhone().getText());
+                    
+                } catch (PersonException ex) {
+                     JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
             update(p);
             JOptionPane.showMessageDialog(update, "Person updated successfully!", "Update - People v1.1.0", JOptionPane.INFORMATION_MESSAGE);
             update.getReset().doClick();
@@ -351,7 +378,7 @@ public class ControllerImplementation implements IController, ActionListener {
             readAll = new ReadAll(menu, true);
             DefaultTableModel model = (DefaultTableModel) readAll.getTable().getModel();
             for (int i = 0; i < s.size(); i++) {
-                model.addRow(new Object[i]);
+                model.addRow(new Object[6]);
                 model.setValueAt(s.get(i).getNif(), i, 0);
                 model.setValueAt(s.get(i).getName(), i, 1);
                 model.setValueAt(s.get(i).getEmail(), i, 2);
@@ -364,6 +391,11 @@ public class ControllerImplementation implements IController, ActionListener {
                     model.setValueAt("yes", i, 4);
                 } else {
                     model.setValueAt("no", i, 4);
+                }
+                if(s.get(i).getPhone() != null){
+                    model.setValueAt(s.get(i).getPhone(), i, 5);
+                }else{
+                    model.setValueAt("", i, 5);
                 }
             }
             readAll.setVisible(true);

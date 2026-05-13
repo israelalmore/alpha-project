@@ -6,6 +6,7 @@ import org.junit.jupiter.api.Test;
 import javax.swing.ImageIcon;
 import java.util.Date;
 import model.entity.Person;
+import model.entity.PersonException;
 
 class PersonTest {
 
@@ -16,11 +17,18 @@ class PersonTest {
     private String email = "jaja@gmail.com";
     private Date dateOfBirth = new Date();
     private ImageIcon photo = new ImageIcon();
+    private String phoneNumber = "612345678";
 
     @BeforeEach
     void setUp() {
         person = new Person(nif);
-        personWithFullData = new Person(name, nif, email, dateOfBirth, photo);
+
+        try {
+            personWithFullData = new Person(name, nif, email, dateOfBirth, photo, phoneNumber);
+        } catch (PersonException e) {
+            fail("Setup failed: " + e.getMessage());
+        }
+
     }
 
     @Test
@@ -38,13 +46,14 @@ class PersonTest {
         assertEquals(nif, personWithNameAndNif.getNif());
     }
 
-    @Test
-    void testConstructorFullData() {
-        assertEquals(name, personWithFullData.getName());
-        assertEquals(nif, personWithFullData.getNif());
-        assertEquals(dateOfBirth, personWithFullData.getDateOfBirth());
-        assertEquals(photo, personWithFullData.getPhoto());
-    }
+   @Test
+void testConstructorFullData() {
+    assertEquals(name, personWithFullData.getName());
+    assertEquals(nif, personWithFullData.getNif());
+    assertEquals(dateOfBirth, personWithFullData.getDateOfBirth());
+    assertEquals(photo, personWithFullData.getPhoto());
+    assertEquals(phoneNumber, personWithFullData.getPhone());
+}
 
     @Test
     void testGettersAndSetters() {
@@ -96,7 +105,30 @@ class PersonTest {
     @Test
     void testToString() {
         String expected = "Person {Name = " + name + ", NIF = " + nif + ", email = " + email
-                + ", DateOfBirth = " + dateOfBirth + ", Photo = true}";
+                + ", DateOfBirth = " + dateOfBirth + ", Photo = true" + ", Phone = true }";
         assertEquals(expected, personWithFullData.toString());
     }
+    
+    @Test
+void testSetPhoneValid() {
+    try {
+        person.setPhone("612345678");
+        assertEquals("612345678", person.getPhone());
+    } catch (PersonException e) {
+        fail("Should not throw exception for valid phone: " + e.getMessage());
+    }
+}
+@Test
+void testSetPhoneInvalid() {
+    assertThrows(PersonException.class, () -> {
+        person.setPhone("invalid_phone");
+    });
+}
+
+@Test
+void testSetPhoneNull() {
+    assertThrows(PersonException.class, () -> {
+        person.setPhone(null);
+    });
+}
 }

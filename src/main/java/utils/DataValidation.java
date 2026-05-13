@@ -4,6 +4,8 @@
  */
 package utils;
 
+
+
 /**
  * @author Francesc Perez
  * @version 1.1.0
@@ -43,4 +45,10 @@ public class DataValidation {
         return email != null && email.matches(emailRegex);
     }
 
+    public static boolean isValidPhone(String phone) {
+        String phoneRegex = "^\\d{9}$";
+
+        return phone != null && phone.matches(phoneRegex);
+
+    }
 }

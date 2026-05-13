@@ -16,6 +16,8 @@ import javax.persistence.EntityManagerFactory;
 import javax.persistence.Persistence;
 import javax.persistence.TypedQuery;
 import javax.swing.ImageIcon;
+import javax.swing.JOptionPane;
+import model.entity.PersonException;
 
 /**
  * This class implements the IDAO interface and completes the function code
@@ -113,13 +115,25 @@ public class DAOJPA implements IDAO {
             pC.setDateOfBirth(p.getDateOfBirth());
             if (p.getPhoto() != null) {
                 pC.setPhotoOnlyJPA(imageIconToBytes(p.getPhoto()));
-            } else {
+
+        } else {  
                 pC.setPhotoOnlyJPA(null);
-            }
-            em.getTransaction().commit();
         }
+            if(p.getPhone() != null){
+                try {
+                pC.setPhone(p.getPhone());
+                    
+                } catch (PersonException e) {
+                   throw new PersonException(e.getMessage());
+                }
+                
+
+        }
+        }
+        em.getTransaction().commit();
         em.close();
     }
+    
 
     @Override
     public void delete(Person p) throws Exception {
@@ -132,6 +146,7 @@ public class DAOJPA implements IDAO {
             em.remove(pR);
         }
         em.getTransaction().commit();
+        em.close();
     }
 
     @Override
@@ -144,6 +159,7 @@ public class DAOJPA implements IDAO {
             em.remove(pR);
         }
         em.getTransaction().commit();
+        em.close();
     }
 
     @Override
