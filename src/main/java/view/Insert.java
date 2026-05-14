@@ -33,6 +33,13 @@ public class Insert extends javax.swing.JDialog {
     public Insert(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        NumberPhone.addFocusListener(new java.awt.event.FocusAdapter() {
+        public void focusGained(java.awt.event.FocusEvent evt) {
+            if (NumberPhone.getText().equals("\"e.g. +34 612 345 678\"")) {
+                NumberPhone.setText("");
+            }
+        }
+    });
 
         setDatePickerButtonText(dateOfBirth, "Seleccionar una fecha");
 
@@ -428,6 +435,11 @@ public class Insert extends javax.swing.JDialog {
 
     private void NumberPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NumberPhoneKeyReleased
         // TODO add your handling code here:
+        if (!NumberPhone.getText().isEmpty() 
+        && NumberPhone.getText().length() >= 9
+        && !isValidPhone(NumberPhone.getText())) {
+        JOptionPane.showMessageDialog(this, "Invalid phone number format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+    }
         showInsert();
     }//GEN-LAST:event_NumberPhoneKeyReleased
 
