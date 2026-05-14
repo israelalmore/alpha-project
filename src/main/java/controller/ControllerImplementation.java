@@ -17,6 +17,9 @@ import view.Menu;
 import view.Read;
 import view.ReadAll;
 import view.Update;
+import java.text.SimpleDateFormat;
+import java.util.Date;
+import javax.swing.JFileChooser;
 
 import java.awt.event.ActionEvent;
 import java.awt.event.ActionListener;
@@ -117,8 +120,33 @@ public class ControllerImplementation implements IController, ActionListener {
             handleDeleteAll();
         } else if (e.getSource() == menu.getCount()) {
             handleCount();
+        }else if(readAll != null && e.getSource() == readAll.getexport()){
+            handleExportCSV();
         }
     }
+    
+  private void handleExportCSV() {
+    String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+    String fileName = "people_data_" + date + ".csv";
+    
+    JFileChooser fileChooser = new JFileChooser();
+    fileChooser.setSelectedFile(new File(fileName));
+    int result = fileChooser.showSaveDialog(readAll);
+    
+    if (result == JFileChooser.APPROVE_OPTION) {
+        File selectedFile = fileChooser.getSelectedFile();
+        ArrayList<Person> people = readAll();
+        try {
+            new DAOFile().exportCSV(people, selectedFile);
+            JOptionPane.showMessageDialog(readAll, 
+                "Datos exportados exitosamente como " + selectedFile.getName(), 
+                "Export CSV", 
+                JOptionPane.INFORMATION_MESSAGE);
+        } catch (IOException ex) {
+            JOptionPane.showMessageDialog(readAll, ex.getMessage(), "Export CSV", JOptionPane.ERROR_MESSAGE);
+        }
+    }
+}
 
     private void handleDataStorageSelection() {
         String daoSelected = ((javax.swing.JCheckBox) (dSS.getAccept()[1])).getText();
@@ -376,6 +404,7 @@ public class ControllerImplementation implements IController, ActionListener {
             JOptionPane.showMessageDialog(menu, "There are not people registered yet.", "Read All - People v1.1.0", JOptionPane.WARNING_MESSAGE);
         } else {
             readAll = new ReadAll(menu, true);
+            readAll.getexport().addActionListener(this);
             DefaultTableModel model = (DefaultTableModel) readAll.getTable().getModel();
             for (int i = 0; i < s.size(); i++) {
                 model.addRow(new Object[6]);

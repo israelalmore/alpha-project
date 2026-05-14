@@ -46,9 +46,9 @@ public class DataValidation {
     }
 
     public static boolean isValidPhone(String phone) {
-        String phoneRegex = "^\\d{9}$";
-
-        return phone != null && phone.matches(phoneRegex);
+        String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(?:\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
+        System.out.println("Phone: " + phone + " Valid: " + (phone != null && phone.matches(phoneRegex)));
+    return phone != null && phone.matches(phoneRegex);
 
     }
 }

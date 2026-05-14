@@ -32,6 +32,7 @@ public class Update extends javax.swing.JDialog {
     public Update(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
+        
 
         setDatePickerButtonText(dateOfBirth, "Seleccionar una fecha");
 
@@ -391,7 +392,11 @@ public class Update extends javax.swing.JDialog {
     }// GEN-LAST:event_NumberPhoneKeyPressed
 
     private void NumberPhoneKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NumberPhoneKeyReleased
-
+             if (!NumberPhone.getText().isEmpty() 
+        && NumberPhone.getText().length() >= 9
+        && !isValidPhone(NumberPhone.getText())) {
+        JOptionPane.showMessageDialog(this, "Invalid phone number format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+    }
     }// GEN-LAST:event_NumberPhoneKeyReleased
 
     private void photoMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_photoMouseClicked
@@ -414,8 +419,8 @@ public class Update extends javax.swing.JDialog {
     private void nameKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_nameKeyReleased
         String currentEmail = email.getText();
         boolean emailOk = currentEmail.isEmpty() || isValidEmail(currentEmail);
-
-        if (name.getText().length() == 0 || !emailOk) {
+        boolean phoneOk = NumberPhone.getText().isEmpty() || isValidPhone(NumberPhone.getText());
+        if (name.getText().length() == 0 || !emailOk || !phoneOk) {
             update.setEnabled(false);
         } else if (!nif.getText().isEmpty()) {
             update.setEnabled(true);
