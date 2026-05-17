@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import static utils.DataValidation.isValidPhone;
+import static utils.DataValidation.isValidPostalCode;
 
 /**
  * Interface used to register a person. It is mandatory to enter at least the
@@ -34,12 +35,12 @@ public class Insert extends javax.swing.JDialog {
         super(parent, modal);
         initComponents();
         NumberPhone.addFocusListener(new java.awt.event.FocusAdapter() {
-        public void focusGained(java.awt.event.FocusEvent evt) {
-            if (NumberPhone.getText().equals("\"e.g. +34 612 345 678\"")) {
-                NumberPhone.setText("");
+            public void focusGained(java.awt.event.FocusEvent evt) {
+                if (NumberPhone.getText().equals("\"e.g. +34 612 345 678\"")) {
+                    NumberPhone.setText("");
+                }
             }
-        }
-    });
+        });
 
         setDatePickerButtonText(dateOfBirth, "Seleccionar una fecha");
 
@@ -87,10 +88,14 @@ public class Insert extends javax.swing.JDialog {
     public JLabel getPhoto() {
         return photo;
     }
+
     public JTextField getPhone() {
         return NumberPhone;
     }
-    
+
+    public JTextField getPostalCode() {
+        return PostalCode;
+    }
 
     /**
      * This method is called from within the constructor to initialize the form.
@@ -356,7 +361,8 @@ public class Insert extends javax.swing.JDialog {
     private void showInsert() {
         boolean emailOk = email.getText().isEmpty() || isValidEmail(email.getText());
         boolean phoneOk = NumberPhone.getText().isEmpty() || isValidPhone(NumberPhone.getText());
-        if (!name.getText().isEmpty() && !nif.isEditable() && emailOk && phoneOk) {
+        boolean postalOk = PostalCode.getText().isEmpty() || isValidPostalCode(PostalCode.getText());
+        if (!name.getText().isEmpty() && !nif.isEditable() && emailOk && phoneOk && postalOk) {
             insert.setEnabled(true);
         } else {
             insert.setEnabled(false);
@@ -373,6 +379,8 @@ public class Insert extends javax.swing.JDialog {
 
         email.setText("");
 
+        PostalCode.setText("");
+
         //We reset the calendar date to the current date ...
         LocalDate dateLocate = LocalDate.now();
         ZoneId systemTimeZone = ZoneId.systemDefault();
@@ -388,7 +396,7 @@ public class Insert extends javax.swing.JDialog {
     }//GEN-LAST:event_resetActionPerformed
 
     private void nifKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_nifKeyTyped
-        if (!isNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE ) {
+        if (!isNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE) {
             JOptionPane.showMessageDialog(this, "Type only numbers [0-9]", this.getTitle(), JOptionPane.ERROR_MESSAGE);
             evt.consume();
         }
@@ -435,21 +443,21 @@ public class Insert extends javax.swing.JDialog {
 
     private void NumberPhoneKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NumberPhoneKeyReleased
         // TODO add your handling code here:
-        if (!NumberPhone.getText().isEmpty() 
-        && NumberPhone.getText().length() >= 9
-        && !isValidPhone(NumberPhone.getText())) {
-        JOptionPane.showMessageDialog(this, "Invalid phone number format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
-    }
+        if (!NumberPhone.getText().isEmpty()
+                && NumberPhone.getText().length() >= 9
+                && !isValidPhone(NumberPhone.getText())) {
+            JOptionPane.showMessageDialog(this, "Invalid phone number format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
         showInsert();
     }//GEN-LAST:event_NumberPhoneKeyReleased
 
     private void NumberPhoneKeyTyped(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_NumberPhoneKeyTyped
         // TODO add your handling code here:
-        
-        if(!isNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE && evt.getKeyChar() != '-' && evt.getKeyChar() != '+' && evt.getKeyChar() != '.' && evt.getKeyChar() != ' '){
+
+        if (!isNumber(evt.getKeyChar()) && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE && evt.getKeyChar() != KeyEvent.VK_DELETE && evt.getKeyChar() != '-' && evt.getKeyChar() != '+' && evt.getKeyChar() != '.' && evt.getKeyChar() != ' ') {
             JOptionPane.showMessageDialog(this, "Type only numbers ", this.getTitle(), JOptionPane.ERROR_MESSAGE);
             evt.consume();
-             }
+        }
     }//GEN-LAST:event_NumberPhoneKeyTyped
 
     private void NumberPhoneActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_NumberPhoneActionPerformed
@@ -473,7 +481,6 @@ public class Insert extends javax.swing.JDialog {
         showInsert();
     }//GEN-LAST:event_emailKeyPressed
 
-  
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField NumberPhone;
