@@ -120,33 +120,33 @@ public class ControllerImplementation implements IController, ActionListener {
             handleDeleteAll();
         } else if (e.getSource() == menu.getCount()) {
             handleCount();
-        }else if(readAll != null && e.getSource() == readAll.getexport()){
+        } else if (readAll != null && e.getSource() == readAll.getexport()) {
             handleExportCSV();
         }
     }
-    
-  private void handleExportCSV() {
-    String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
-    String fileName = "people_data_" + date + ".csv";
-    
-    JFileChooser fileChooser = new JFileChooser();
-    fileChooser.setSelectedFile(new File(fileName));
-    int result = fileChooser.showSaveDialog(readAll);
-    
-    if (result == JFileChooser.APPROVE_OPTION) {
-        File selectedFile = fileChooser.getSelectedFile();
-        ArrayList<Person> people = readAll();
-        try {
-            new DAOFile().exportCSV(people, selectedFile);
-            JOptionPane.showMessageDialog(readAll, 
-                "Datos exportados exitosamente como " + selectedFile.getName(), 
-                "Export CSV", 
-                JOptionPane.INFORMATION_MESSAGE);
-        } catch (IOException ex) {
-            JOptionPane.showMessageDialog(readAll, ex.getMessage(), "Export CSV", JOptionPane.ERROR_MESSAGE);
+
+    private void handleExportCSV() {
+        String date = new SimpleDateFormat("yyyyMMdd").format(new Date());
+        String fileName = "people_data_" + date + ".csv";
+
+        JFileChooser fileChooser = new JFileChooser();
+        fileChooser.setSelectedFile(new File(fileName));
+        int result = fileChooser.showSaveDialog(readAll);
+
+        if (result == JFileChooser.APPROVE_OPTION) {
+            File selectedFile = fileChooser.getSelectedFile();
+            ArrayList<Person> people = readAll();
+            try {
+                new DAOFile().exportCSV(people, selectedFile);
+                JOptionPane.showMessageDialog(readAll,
+                        "Datos exportados exitosamente como " + selectedFile.getName(),
+                        "Export CSV",
+                        JOptionPane.INFORMATION_MESSAGE);
+            } catch (IOException ex) {
+                JOptionPane.showMessageDialog(readAll, ex.getMessage(), "Export CSV", JOptionPane.ERROR_MESSAGE);
+            }
         }
     }
-}
 
     private void handleDataStorageSelection() {
         String daoSelected = ((javax.swing.JCheckBox) (dSS.getAccept()[1])).getText();
@@ -219,7 +219,7 @@ public class ControllerImplementation implements IController, ActionListener {
                         + "email varchar(100),"
                         + "dateOfBirth DATE, "
                         + "photo varchar(200),"
-                        + "phone varchar(200));" );
+                        + "phone varchar(200));");
                 stmt.close();
                 conn.close();
             }
@@ -270,13 +270,21 @@ public class ControllerImplementation implements IController, ActionListener {
         if (insert.getPhoto().getIcon() != null) {
             p.setPhoto((ImageIcon) insert.getPhoto().getIcon());
         }
-        if(!insert.getPhone().getText().isEmpty()){
+        if (!insert.getPhone().getText().isEmpty()) {
             try {
-            p.setPhone(insert.getPhone().getText());
-                    
+                p.setPhone(insert.getPhone().getText());
+
             } catch (PersonException ex) {
-                    JOptionPane.showMessageDialog(insert, ex.getMessage(), insert.getTitle(), JOptionPane.ERROR_MESSAGE);
-                    return;
+                JOptionPane.showMessageDialog(insert, ex.getMessage(), insert.getTitle(), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
+        if (!insert.getPostalCode().getText().isEmpty()) {
+            try {
+                p.setPostalCode(insert.getPostalCode().getText());
+            } catch (PersonException ex) {
+                JOptionPane.showMessageDialog(insert, ex.getMessage(), insert.getTitle(), JOptionPane.ERROR_MESSAGE);
+                return;
             }
         }
         insert(p);
@@ -306,9 +314,12 @@ public class ControllerImplementation implements IController, ActionListener {
                 pNew.getPhoto().getImage().flush();
                 read.getPhoto().setIcon(pNew.getPhoto());
             }
-            
-            if(pNew.getPhone() != null){
+
+            if (pNew.getPhone() != null) {
                 read.getPhone().setText(pNew.getPhone());
+            }
+            if (pNew.getPostalCode() != null) {
+                read.getPostalCode().setText(pNew.getPostalCode());
             }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -364,9 +375,13 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhoto().setIcon(pNew.getPhoto());
                     update.getUpdate().setEnabled(true);
                 }
-                if(pNew.getPhone() != null){
+                if (pNew.getPhone() != null) {
                     update.getPhone().setText(pNew.getPhone());
                     update.getPhone().setEnabled(true);
+                }
+                if (pNew.getPostalCode() != null) {
+                    update.getPostalCode().setText(pNew.getPostalCode());
+                    update.getPostalCode().setEnabled(true);
                 }
             } else {
                 update.getReset().doClick();
@@ -383,12 +398,20 @@ public class ControllerImplementation implements IController, ActionListener {
             if ((ImageIcon) (update.getPhoto().getIcon()) != null) {
                 p.setPhoto((ImageIcon) update.getPhoto().getIcon());
             }
-            if(!update.getPhone().getText().isEmpty()){
+            if (!update.getPhone().getText().isEmpty()) {
                 try {
-                p.setPhone(update.getPhone().getText());
-                    
+                    p.setPhone(update.getPhone().getText());
+
                 } catch (PersonException ex) {
-                     JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            if (!update.getPostalCode().getText().isEmpty()) {
+                try {
+                    p.setPostalCode(update.getPostalCode().getText());
+                } catch (PersonException ex) {
+                    JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
                     return;
                 }
             }
@@ -421,9 +444,9 @@ public class ControllerImplementation implements IController, ActionListener {
                 } else {
                     model.setValueAt("no", i, 4);
                 }
-                if(s.get(i).getPhone() != null){
+                if (s.get(i).getPhone() != null) {
                     model.setValueAt(s.get(i).getPhone(), i, 5);
-                }else{
+                } else {
                     model.setValueAt("", i, 5);
                 }
             }

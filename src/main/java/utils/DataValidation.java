@@ -4,8 +4,6 @@
  */
 package utils;
 
-
-
 /**
  * @author Francesc Perez
  * @version 1.1.0
@@ -48,7 +46,12 @@ public class DataValidation {
     public static boolean isValidPhone(String phone) {
         String phoneRegex = "^\\+?[0-9]{1,4}?[-.\\s]?(?:\\d{1,3})?[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,4}[-.\\s]?\\d{1,9}$";
         System.out.println("Phone: " + phone + " Valid: " + (phone != null && phone.matches(phoneRegex)));
-    return phone != null && phone.matches(phoneRegex);
+        return phone != null && phone.matches(phoneRegex);
 
+    }
+
+    public static boolean isValidPostalCode(String postalCode) {
+        String postalCodeRegex = "^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$";
+        return postalCode != null && postalCode.matches(postalCodeRegex);
     }
 }
