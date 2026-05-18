@@ -291,6 +291,7 @@ public class ControllerImplementation implements IController, ActionListener {
             DAOLogin daoLogin = new DAOLogin();
             if (daoLogin.validate(login.getUsername(), login.getPassword())) {
                 loginSuccess = true;
+                 JOptionPane.showMessageDialog(login, "Login successful! Welcome " + login.getUsername(), "Login", JOptionPane.INFORMATION_MESSAGE);
                 login.dispose();
             } else {
                 JOptionPane.showMessageDialog(login, "Invalid username or password.", "Login", JOptionPane.ERROR_MESSAGE);
