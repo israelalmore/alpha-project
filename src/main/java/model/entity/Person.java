@@ -29,6 +29,7 @@ public class Person implements Serializable {
     @Lob
     private byte[] photoOnlyJPA;
     private String phoneNumber;
+    private String postalCode;
 
     public Person() {
 
@@ -66,7 +67,6 @@ public class Person implements Serializable {
      * @param dateOfBirth
      * @param photo
      */
-
     public Person(String name, String nif, String email, Date dateOfBirth, ImageIcon photo, String phoneNumber) throws PersonException {
         this.name = name;
         this.nif = nif;
@@ -89,6 +89,22 @@ public class Person implements Serializable {
             throw new PersonException("El formato del numero es incorrecto");
         }
         this.phoneNumber = phoneNumber;
+    }
+
+    private static final String postalCodeRegex = "^(?:0[1-9]|[1-4]\\d|5[0-2])\\d{3}$";
+
+    public String getPostalCode() {
+        return postalCode;
+    }
+
+    public void setPostalCode(String postalCode) throws PersonException {
+        if (postalCode == null || postalCode.isEmpty()) {
+            throw new PersonException("El formato del código postal es incorrecto");
+        }
+        if (!postalCode.matches(postalCodeRegex)) {
+            throw new PersonException("El formato del código postal es incorrecto");
+        }
+        this.postalCode = postalCode;
     }
 
     //Getters and Setters
@@ -184,7 +200,6 @@ public class Person implements Serializable {
     @Override
     public String toString() {
         return "Person {" + "Name = " + name + ", NIF = " + nif + ", email = " + email
-
                 + ", DateOfBirth = " + dateOfBirth + ", Photo = " + (photo != null) + ", Phone = " + (phoneNumber != null) + " }";
 
     }

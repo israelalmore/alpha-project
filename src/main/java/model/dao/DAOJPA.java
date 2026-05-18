@@ -116,24 +116,30 @@ public class DAOJPA implements IDAO {
             if (p.getPhoto() != null) {
                 pC.setPhotoOnlyJPA(imageIconToBytes(p.getPhoto()));
 
-        } else {  
+            } else {
                 pC.setPhotoOnlyJPA(null);
-        }
-            if(p.getPhone() != null){
+            }
+            if (p.getPhone() != null) {
                 try {
-                pC.setPhone(p.getPhone());
-                    
+                    pC.setPhone(p.getPhone());
                 } catch (PersonException e) {
-                   throw new PersonException(e.getMessage());
+                    throw new PersonException(e.getMessage());
                 }
-                
-
+            }
+            if (p.getPostalCode() != null) {
+                try {
+                    pC.setPostalCode(p.getPostalCode());
+                } catch (PersonException e) {
+                    throw new PersonException(e.getMessage());
+                }
+            } else {
+                pC.setPostalCode(null);
+            }
         }
-        }
-        em.getTransaction().commit();
+        em.getTransaction()
+                .commit();
         em.close();
     }
-    
 
     @Override
     public void delete(Person p) throws Exception {

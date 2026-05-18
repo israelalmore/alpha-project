@@ -62,6 +62,9 @@ public class DAOFile implements IDAO {
                     phone = data[5];
                 }
                 personToRead = new Person(data[0], data[1], data[2], date, photo, phone);
+                if (data.length >= 7 && !data[6].equals("null")) {
+                    personToRead.setPostalCode(data[6]);
+                }
 
                 break;
             }
@@ -96,7 +99,11 @@ public class DAOFile implements IDAO {
             if (data.length >= 6 && !data[5].equals("null")) {
                 phone = data[5];
             }
-            people.add(new Person(data[0], data[1], data[2], date, photo, phone));
+            Person personToAdd = new Person(data[0], data[1], data[2], date, photo, phone);
+            if (data.length >= 7 && !data[6].equals("null")) {
+                personToAdd.setPostalCode(data[6]);
+            }
+            people.add(personToAdd);
 
             line = br.readLine();
         }
@@ -114,9 +121,9 @@ public class DAOFile implements IDAO {
         if (p.getDateOfBirth() != null) {
             DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
             String dateAsString = dateFormat.format(p.getDateOfBirth());
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + p.getEmail() +"\t" + dateAsString + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + p.getEmail() + "\t" + dateAsString + "\t");
         } else {
-            bw.write(p.getName() + "\t" + p.getNif() + "\t" + p.getEmail() +  "\t" + "null" + "\t");
+            bw.write(p.getName() + "\t" + p.getNif() + "\t" + p.getEmail() + "\t" + "null" + "\t");
         }
         if (p.getPhoto() != null) {
             FileOutputStream out;
@@ -144,8 +151,12 @@ public class DAOFile implements IDAO {
         }
 
         if (p.getPhone() != null) {
-
-            bw.write(p.getPhone() + "\n");
+            bw.write(p.getPhone() + "\t");
+        } else {
+            bw.write("null" + "\t");
+        }
+        if (p.getPostalCode() != null) {
+            bw.write(p.getPostalCode() + "\n");
         } else {
             bw.write("null" + "\n");
         }
@@ -169,25 +180,17 @@ public class DAOFile implements IDAO {
                     photoFile.delete();
                 }
 
-                
-            }else {
-                if(d.length>=6){
+            } else {
+                String phoneVal = (d.length >= 6) ? d[5] : "null";
+                String postalVal = (d.length >= 7) ? d[6] : "null";
+                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4] + "\t" + phoneVal + "\t" + postalVal + "\n";
 
-                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4] + "\t" + d[5]
-                        + "\n";
-                }else{
-                textoNuevo += d[0] + "\t" + d[1] + "\t" + d[2] + "\t" + d[3] + "\t" + d[4] + "\t" + "null"
-                        + "\n";
-                    
-                }
-            
             }
         }
-            rafRW.setLength(0);
-            rafRW.writeBytes(textoNuevo);
-            rafRW.close();
+        rafRW.setLength(0);
+        rafRW.writeBytes(textoNuevo);
+        rafRW.close();
     }
-    
 
     @Override
     public void deleteAll() throws IOException {
@@ -205,44 +208,47 @@ public class DAOFile implements IDAO {
         delete(p);
         insert(p);
     }
-    
+
     @Override
-    public int count() throws Exception{
+    public int count() throws Exception {
         return readAll().size();
     }
-    
-    
-   public void exportCSV(ArrayList<Person> people, File file) throws IOException {
-    FileWriter fw;
-    BufferedWriter bw;
-    fw = new FileWriter(file);
-    bw = new BufferedWriter(fw);
-    bw.write("NIF,Name,Email,Date of Birth,Photo,Phone");
-    bw.newLine();
-    for (Person p : people) {
-        bw.write(p.getNif() + ",");
-        bw.write(p.getName() + ",");
-        bw.write(p.getEmail() + ",");
-        if (p.getDateOfBirth() != null) {
-            DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
-            bw.write(dateFormat.format(p.getDateOfBirth()) + ",");
-        } else {
-            bw.write("null" + ",");
+
+    public void exportCSV(ArrayList<Person> people, File file) throws IOException {
+        FileWriter fw;
+        BufferedWriter bw;
+        fw = new FileWriter(file);
+        bw = new BufferedWriter(fw);
+        bw.write("NIF,Name,Email,Date of Birth,Photo,Phone,PostalCode");
+        bw.newLine();
+        for (Person p : people) {
+            bw.write(p.getNif() + ",");
+            bw.write(p.getName() + ",");
+            bw.write(p.getEmail() + ",");
+            if (p.getDateOfBirth() != null) {
+                DateFormat dateFormat = new SimpleDateFormat("yyyy/MM/dd");
+                bw.write(dateFormat.format(p.getDateOfBirth()) + ",");
+            } else {
+                bw.write("null" + ",");
+            }
+            if (p.getPhoto() != null) {
+                bw.write("yes" + ",");
+            } else {
+                bw.write("no" + ",");
+            }
+            if (p.getPhone() != null) {
+                bw.write(p.getPhone() + ",");
+            } else {
+                bw.write("null" + ",");
+            }
+            if (p.getPostalCode() != null) {
+                bw.write(p.getPostalCode() + "\n");
+            } else {
+                bw.write("null" + "\n");
+            }
         }
-        if (p.getPhoto() != null) {
-            bw.write("yes" + ",");
-        } else {
-            bw.write("no" + ",");
-        }
-        if (p.getPhone() != null) {
-            bw.write(p.getPhone() + "\n");
-        } else {
-            bw.write("null" + "\n");
-        }
+        bw.flush();
+        bw.close();
     }
-    bw.flush();
-    bw.close();
-}
-    
 
 }
