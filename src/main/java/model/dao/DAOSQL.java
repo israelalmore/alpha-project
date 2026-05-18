@@ -35,9 +35,8 @@ public class DAOSQL implements IDAO {
     private final String SQL_SELECT_ALL = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + ";";
     private final String SQL_SELECT = "SELECT * FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ?);";
 
-    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, email, dateOfBirth, photo, phone) VALUES (?, ?, ?, ?, ?, ?);";
-    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, email = ?, dateOfBirth = ?, photo = ? , phone = ? WHERE (nif = ?);";
-
+    private final String SQL_INSERT = "INSERT INTO " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " (nif, name, email, dateOfBirth, photo, phone, postalCode) VALUES (?, ?, ?, ?, ?, ?, ?);";
+    private final String SQL_UPDATE = "UPDATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " SET name = ?, email = ?, dateOfBirth = ?, photo = ? , phone = ?, postalCode = ? WHERE (nif = ?);";
 
     private final String SQL_DELETE = "DELETE FROM " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE() + " WHERE (nif = ";
     private final String SQL_DELETE_ALL = "TRUNCATE " + Routes.DB.getDbServerDB() + "." + Routes.DB.getDbServerTABLE();
@@ -77,8 +76,12 @@ public class DAOSQL implements IDAO {
                 pReturn.setPhoto(new ImageIcon(photo));
             }
             String phone = rs.getString("phone");
-            if (phone != null){
+            if (phone != null) {
                 pReturn.setPhone(phone);
+            }
+            String postalCode = rs.getString("postalCode");
+            if (postalCode != null) {
+                pReturn.setPostalCode(postalCode);
             }
         }
         rs.close();
@@ -89,7 +92,7 @@ public class DAOSQL implements IDAO {
 
     @Override
 
-    public ArrayList<Person> readAll() throws SQLException, PersonException{
+    public ArrayList<Person> readAll() throws SQLException, PersonException {
 
         ArrayList<Person> people = new ArrayList<>();
         Connection conn;
@@ -171,12 +174,13 @@ public class DAOSQL implements IDAO {
         } else {
             instruction.setString(5, null);
         }
-        if(p.getPhone() != null){
+        if (p.getPhone() != null) {
             instruction.setString(6, p.getPhone());
-        }else{
+        } else {
             instruction.setString(6, null);
-            
+
         }
+        instruction.setString(7, p.getPostalCode());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);
@@ -220,12 +224,13 @@ public class DAOSQL implements IDAO {
                     + ".png");
             photoFile.delete();
         }
-        if(p.getPhone() != null){
+        if (p.getPhone() != null) {
             instruction.setString(5, p.getPhone());
-        }else{
-            instruction.setString(5,null);
+        } else {
+            instruction.setString(5, null);
         }
-        instruction.setString(6, p.getNif());
+        instruction.setString(6, p.getPostalCode());
+        instruction.setString(7, p.getNif());
         instruction.executeUpdate();
         instruction.close();
         disconnect(conn);

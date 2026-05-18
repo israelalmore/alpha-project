@@ -20,6 +20,7 @@ import javax.swing.JTextField;
 import org.jdatepicker.DateModel;
 import org.jdatepicker.JDatePicker;
 import static utils.DataValidation.isValidPhone;
+import static utils.DataValidation.isValidPostalCode;
 
 /**
  * Interface used to updated a person. It is mandatory to enter the NIF.
@@ -32,7 +33,6 @@ public class Update extends javax.swing.JDialog {
     public Update(java.awt.Frame parent, boolean modal) {
         super(parent, modal);
         initComponents();
-        
 
         setDatePickerButtonText(dateOfBirth, "Seleccionar una fecha");
 
@@ -90,6 +90,10 @@ public class Update extends javax.swing.JDialog {
         return reset;
     }
 
+    public JTextField getPostalCode() {
+        return PostalCode;
+    }
+
     /**
      * This method is called from within the constructor to initialize the form.
      * WARNING: Do NOT modify this code. The content of this method is always
@@ -115,6 +119,8 @@ public class Update extends javax.swing.JDialog {
         name = new javax.swing.JTextField();
         jLabel4 = new javax.swing.JLabel();
         email = new javax.swing.JTextField();
+        PostalCode = new javax.swing.JTextField();
+        jLabel10 = new javax.swing.JLabel();
 
         setDefaultCloseOperation(javax.swing.WindowConstants.DISPOSE_ON_CLOSE);
         setTitle("Update - People v1.1.0");
@@ -215,7 +221,7 @@ public class Update extends javax.swing.JDialog {
         read.setText("readnoVisible");
 
         jLabel9.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
-        jLabel9.setText("Number Phone");
+        jLabel9.setText("Postal Code");
         jLabel9.setMaximumSize(new java.awt.Dimension(150, 22));
         jLabel9.setMinimumSize(new java.awt.Dimension(159, 22));
         jLabel9.setPreferredSize(new java.awt.Dimension(150, 22));
@@ -252,12 +258,44 @@ public class Update extends javax.swing.JDialog {
             }
         });
 
+        PostalCode.setEnabled(false);
+        PostalCode.setMaximumSize(new java.awt.Dimension(400, 22));
+        PostalCode.setMinimumSize(new java.awt.Dimension(400, 22));
+        PostalCode.setPreferredSize(new java.awt.Dimension(400, 22));
+        PostalCode.addActionListener(new java.awt.event.ActionListener() {
+            public void actionPerformed(java.awt.event.ActionEvent evt) {
+                PostalCodeActionPerformed(evt);
+            }
+        });
+        PostalCode.addKeyListener(new java.awt.event.KeyAdapter() {
+            public void keyPressed(java.awt.event.KeyEvent evt) {
+                PostalCodeKeyPressed(evt);
+            }
+            public void keyReleased(java.awt.event.KeyEvent evt) {
+                PostalCodeKeyReleased(evt);
+            }
+        });
+
+        jLabel10.setFont(new java.awt.Font("Segoe UI", 1, 18)); // NOI18N
+        jLabel10.setText("Number Phone");
+        jLabel10.setMaximumSize(new java.awt.Dimension(150, 22));
+        jLabel10.setMinimumSize(new java.awt.Dimension(159, 22));
+        jLabel10.setPreferredSize(new java.awt.Dimension(150, 22));
+
         javax.swing.GroupLayout layout = new javax.swing.GroupLayout(getContentPane());
         getContentPane().setLayout(layout);
         layout.setHorizontalGroup(
             layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
             .addGroup(layout.createSequentialGroup()
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                    .addGroup(layout.createSequentialGroup()
+                        .addContainerGap()
+                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE))
+                    .addGroup(layout.createSequentialGroup()
+                        .addGap(381, 381, 381)
+                        .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addGap(31, 31, 31)
+                        .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                     .addGroup(layout.createSequentialGroup()
                         .addGap(41, 41, 41)
                         .addComponent(photo, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -267,24 +305,18 @@ public class Update extends javax.swing.JDialog {
                             .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel4, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(jLabel3, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, 150, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addGap(64, 64, 64)
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.TRAILING)
                             .addComponent(NumberPhone, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(dateOfBirth, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(email, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
                             .addComponent(name, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
-                            .addComponent(nif, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE))
+                            .addComponent(nif, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PostalCode, javax.swing.GroupLayout.PREFERRED_SIZE, 531, javax.swing.GroupLayout.PREFERRED_SIZE))
                         .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
-                        .addComponent(read))
-                    .addGroup(layout.createSequentialGroup()
-                        .addContainerGap()
-                        .addComponent(jLabel2, javax.swing.GroupLayout.PREFERRED_SIZE, 891, javax.swing.GroupLayout.PREFERRED_SIZE))
-                    .addGroup(layout.createSequentialGroup()
-                        .addGap(381, 381, 381)
-                        .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                        .addGap(31, 31, 31)
-                        .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
+                        .addComponent(read)))
                 .addGap(396, 396, 396))
         );
         layout.setVerticalGroup(
@@ -292,7 +324,12 @@ public class Update extends javax.swing.JDialog {
             .addGroup(layout.createSequentialGroup()
                 .addGap(36, 36, 36)
                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
-                    .addComponent(photo, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                    .addGroup(layout.createSequentialGroup()
+                        .addComponent(photo, javax.swing.GroupLayout.PREFERRED_SIZE, 171, javax.swing.GroupLayout.PREFERRED_SIZE)
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
+                            .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)))
                     .addGroup(layout.createSequentialGroup()
                         .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
                             .addComponent(jLabel1, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
@@ -314,13 +351,14 @@ public class Update extends javax.swing.JDialog {
                                     .addComponent(dateOfBirth, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
                                 .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.UNRELATED)
                                 .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                                    .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                                    .addComponent(NumberPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
-                                .addGap(3, 3, 3)))))
-                .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED, 57, Short.MAX_VALUE)
-                .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.BASELINE)
-                    .addComponent(update, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
-                    .addComponent(reset, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                    .addComponent(NumberPhone, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                                    .addComponent(jLabel10, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                                .addGap(3, 3, 3)))
+                        .addPreferredGap(javax.swing.LayoutStyle.ComponentPlacement.RELATED)
+                        .addGroup(layout.createParallelGroup(javax.swing.GroupLayout.Alignment.LEADING)
+                            .addComponent(jLabel9, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE)
+                            .addComponent(PostalCode, javax.swing.GroupLayout.PREFERRED_SIZE, javax.swing.GroupLayout.DEFAULT_SIZE, javax.swing.GroupLayout.PREFERRED_SIZE))
+                        .addGap(0, 0, Short.MAX_VALUE)))
                 .addGap(18, 18, 18)
                 .addComponent(jLabel2)
                 .addGap(56, 56, 56))
@@ -329,6 +367,26 @@ public class Update extends javax.swing.JDialog {
         pack();
         setLocationRelativeTo(null);
     }// </editor-fold>//GEN-END:initComponents
+
+    private void PostalCodeActionPerformed(java.awt.event.ActionEvent evt) {//GEN-FIRST:event_PostalCodeActionPerformed
+
+    }//GEN-LAST:event_PostalCodeActionPerformed
+
+    private void PostalCodeKeyPressed(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PostalCodeKeyPressed
+        if (!isNumber(evt.getKeyChar())
+                && evt.getKeyChar() != KeyEvent.VK_BACK_SPACE
+                && evt.getKeyChar() != KeyEvent.VK_DELETE) {
+            JOptionPane.showMessageDialog(this, "Type only numbers [0-9]", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+            evt.consume();
+        }
+    }//GEN-LAST:event_PostalCodeKeyPressed
+
+    private void PostalCodeKeyReleased(java.awt.event.KeyEvent evt) {//GEN-FIRST:event_PostalCodeKeyReleased
+        if (!PostalCode.getText().isEmpty()
+                && !isValidPostalCode(PostalCode.getText())) {
+            JOptionPane.showMessageDialog(this, "Invalid postal code format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
+    }//GEN-LAST:event_PostalCodeKeyReleased
 
     private void nifKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_nifKeyPressed
         if (nif.getText().length() == 8) {
@@ -379,6 +437,8 @@ public class Update extends javax.swing.JDialog {
         dateOfBirth.getModel().setValue(null);
         dateOfBirth.setEnabled(false);
         update.setEnabled(false);
+        PostalCode.setText("");
+        PostalCode.setEnabled(false);
     }// GEN-LAST:event_resetActionPerformed
 
     private void NumberPhoneKeyPressed(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NumberPhoneKeyPressed
@@ -392,11 +452,11 @@ public class Update extends javax.swing.JDialog {
     }// GEN-LAST:event_NumberPhoneKeyPressed
 
     private void NumberPhoneKeyReleased(java.awt.event.KeyEvent evt) {// GEN-FIRST:event_NumberPhoneKeyReleased
-             if (!NumberPhone.getText().isEmpty() 
-        && NumberPhone.getText().length() >= 9
-        && !isValidPhone(NumberPhone.getText())) {
-        JOptionPane.showMessageDialog(this, "Invalid phone number format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
-    }
+        if (!NumberPhone.getText().isEmpty()
+                && NumberPhone.getText().length() >= 9
+                && !isValidPhone(NumberPhone.getText())) {
+            JOptionPane.showMessageDialog(this, "Invalid phone number format.", this.getTitle(), JOptionPane.ERROR_MESSAGE);
+        }
     }// GEN-LAST:event_NumberPhoneKeyReleased
 
     private void photoMouseClicked(java.awt.event.MouseEvent evt) {// GEN-FIRST:event_photoMouseClicked
@@ -459,9 +519,11 @@ public class Update extends javax.swing.JDialog {
 
     // Variables declaration - do not modify//GEN-BEGIN:variables
     private javax.swing.JTextField NumberPhone;
+    private javax.swing.JTextField PostalCode;
     private org.jdatepicker.JDatePicker dateOfBirth;
     private javax.swing.JTextField email;
     private javax.swing.JLabel jLabel1;
+    private javax.swing.JLabel jLabel10;
     private javax.swing.JLabel jLabel2;
     private javax.swing.JLabel jLabel3;
     private javax.swing.JLabel jLabel4;

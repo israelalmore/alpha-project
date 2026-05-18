@@ -339,6 +339,14 @@ public class ControllerImplementation implements IController, ActionListener {
                 return;
             }
         }
+        if (!insert.getPostalCode().getText().isEmpty()) {
+            try {
+                p.setPostalCode(insert.getPostalCode().getText());
+            } catch (PersonException ex) {
+                JOptionPane.showMessageDialog(insert, ex.getMessage(), insert.getTitle(), JOptionPane.ERROR_MESSAGE);
+                return;
+            }
+        }
         insert(p);
         insert.getReset().doClick();
     }
@@ -369,6 +377,9 @@ public class ControllerImplementation implements IController, ActionListener {
 
             if (pNew.getPhone() != null) {
                 read.getPhone().setText(pNew.getPhone());
+            }
+            if (pNew.getPostalCode() != null) {
+                read.getPostalCode().setText(pNew.getPostalCode());
             }
         } else {
             JOptionPane.showMessageDialog(read, p.getNif() + " doesn't exist.", read.getTitle(), JOptionPane.WARNING_MESSAGE);
@@ -428,6 +439,10 @@ public class ControllerImplementation implements IController, ActionListener {
                     update.getPhone().setText(pNew.getPhone());
                     update.getPhone().setEnabled(true);
                 }
+                if (pNew.getPostalCode() != null) {
+                    update.getPostalCode().setText(pNew.getPostalCode());
+                    update.getPostalCode().setEnabled(true);
+                }
             } else {
                 update.getReset().doClick();
             }
@@ -447,6 +462,14 @@ public class ControllerImplementation implements IController, ActionListener {
                 try {
                     p.setPhone(update.getPhone().getText());
 
+                } catch (PersonException ex) {
+                    JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
+                    return;
+                }
+            }
+            if (!update.getPostalCode().getText().isEmpty()) {
+                try {
+                    p.setPostalCode(update.getPostalCode().getText());
                 } catch (PersonException ex) {
                     JOptionPane.showMessageDialog(update, ex.getMessage(), update.getTitle(), JOptionPane.ERROR_MESSAGE);
                     return;
