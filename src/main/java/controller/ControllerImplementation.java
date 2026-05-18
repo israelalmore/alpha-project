@@ -39,9 +39,11 @@ import javax.swing.ImageIcon;
 import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
+import model.dao.DAOLogin;
 import org.jdatepicker.DateModel;
 import utils.Constants;
 import view.Count;
+import view.Login;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -64,6 +66,8 @@ public class ControllerImplementation implements IController, ActionListener {
     private Update update;
     private ReadAll readAll;
     private Count count;
+    private Login login;
+    private boolean loginSuccess = false;
 
     /**
      * This constructor allows the controller to know which data storage option
@@ -83,6 +87,7 @@ public class ControllerImplementation implements IController, ActionListener {
      */
     @Override
     public void start() {
+        setupUsers();
         dSS.setVisible(true);
     }
 
@@ -96,29 +101,33 @@ public class ControllerImplementation implements IController, ActionListener {
     public void actionPerformed(ActionEvent e) {
         if (e.getSource() == dSS.getAccept()[0]) {
             handleDataStorageSelection();
-        } else if (e.getSource() == menu.getInsert()) {
+        } else if (login != null && e.getSource() == login.getLogin()) {
+            handleLoginValidation();
+        } else if (login != null && e.getSource() == login.getCancel()) {
+            System.exit(0);
+        } else if (menu != null && e.getSource() == menu.getInsert()) {
             handleInsertAction();
         } else if (insert != null && e.getSource() == insert.getInsert()) {
             handleInsertPerson();
-        } else if (e.getSource() == menu.getRead()) {
+        } else if (menu != null && e.getSource() == menu.getRead()) {
             handleReadAction();
         } else if (read != null && e.getSource() == read.getRead()) {
             handleReadPerson();
-        } else if (e.getSource() == menu.getDelete()) {
+        } else if (menu != null && e.getSource() == menu.getDelete()) {
             handleDeleteAction();
         } else if (delete != null && e.getSource() == delete.getDelete()) {
             handleDeletePerson();
-        } else if (e.getSource() == menu.getUpdate()) {
+        } else if (menu != null && e.getSource() == menu.getUpdate()) {
             handleUpdateAction();
         } else if (update != null && e.getSource() == update.getRead()) {
             handleReadForUpdate();
         } else if (update != null && e.getSource() == update.getUpdate()) {
             handleUpdatePerson();
-        } else if (e.getSource() == menu.getReadAll()) {
+        } else if (menu != null && e.getSource() == menu.getReadAll()) {
             handleReadAll();
-        } else if (e.getSource() == menu.getDeleteAll()) {
+        } else if (menu != null && e.getSource() == menu.getDeleteAll()) {
             handleDeleteAll();
-        } else if (e.getSource() == menu.getCount()) {
+        } else if (menu != null && e.getSource() == menu.getCount()) {
             handleCount();
         } else if (readAll != null && e.getSource() == readAll.getexport()) {
             handleExportCSV();
@@ -171,7 +180,10 @@ public class ControllerImplementation implements IController, ActionListener {
                 setupJPADatabase();
                 break;
         }
-        setupMenu();
+        handleLogin();
+        if (loginSuccess) {
+            setupMenu();
+        }
     }
 
     private void setupFileStorage() {
@@ -189,6 +201,25 @@ public class ControllerImplementation implements IController, ActionListener {
             }
         }
         dao = new DAOFile();
+    }
+
+    private void setupUsers() {
+        try {
+            Connection conn = DriverManager.getConnection(Routes.DB.getDbServerAddress() + Routes.DB.getDbServerComOpt(),
+                    Routes.DB.getDbServerUser(),
+                    Routes.DB.getDbServerPassword());
+            Statement stmt = conn.createStatement();
+            stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS people;");
+            stmt.executeUpdate("CREATE TABLE IF NOT EXISTS people.users ("
+                    + "username VARCHAR(50) PRIMARY KEY, "
+                    + "password VARCHAR(200));");
+            stmt.executeUpdate("INSERT IGNORE INTO people.users VALUES ('admin', 'admin123');");
+            stmt.close();
+            conn.close();
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(null, "Error creating users table.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
     }
 
     private void setupFileSerialization() {
@@ -253,6 +284,34 @@ public class ControllerImplementation implements IController, ActionListener {
         menu.getReadAll().addActionListener(this);
         menu.getDeleteAll().addActionListener(this);
         menu.getCount().addActionListener(this);
+    }
+
+    private void handleLoginValidation() {
+        try {
+            DAOLogin daoLogin = new DAOLogin();
+            if (daoLogin.validate(login.getUsername(), login.getPassword())) {
+                loginSuccess = true;
+                login.dispose();
+            } else {
+                JOptionPane.showMessageDialog(login, "Invalid username or password.", "Login", JOptionPane.ERROR_MESSAGE);
+            }
+        } catch (SQLException ex) {
+            JOptionPane.showMessageDialog(login, ex.getMessage(), "Login", JOptionPane.ERROR_MESSAGE);
+            System.exit(0);
+        }
+    }
+
+    private void handleLogin() {
+         login = new Login(null, true);
+    login.getLogin().addActionListener(this);
+    login.getCancel().addActionListener(this);
+    login.addWindowListener(new java.awt.event.WindowAdapter() {
+        @Override
+        public void windowClosing(java.awt.event.WindowEvent e) {
+            System.exit(0);
+        }
+    });
+    login.setVisible(true);
     }
 
     private void handleInsertAction() {
