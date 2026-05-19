@@ -6,7 +6,6 @@ import org.junit.jupiter.api.Test;
 import javax.swing.ImageIcon;
 import java.util.Date;
 import model.entity.Person;
-import model.entity.PersonException;
 
 class PersonTest {
 
