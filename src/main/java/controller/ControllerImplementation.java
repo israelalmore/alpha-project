@@ -40,10 +40,12 @@ import javax.swing.JButton;
 import javax.swing.JOptionPane;
 import javax.swing.table.DefaultTableModel;
 import model.dao.DAOLogin;
+import model.entity.UserExceptionDAO;
 import org.jdatepicker.DateModel;
 import utils.Constants;
 import view.Count;
 import view.Login;
+import model.entity.User;
 
 /**
  * This class starts the visual part of the application and programs and manages
@@ -67,6 +69,7 @@ public class ControllerImplementation implements IController, ActionListener {
     private ReadAll readAll;
     private Count count;
     private Login login;
+    //private User user;
     private boolean loginSuccess = false;
 
     /**
@@ -212,12 +215,16 @@ public class ControllerImplementation implements IController, ActionListener {
             stmt.executeUpdate("CREATE DATABASE IF NOT EXISTS people;");
             stmt.executeUpdate("CREATE TABLE IF NOT EXISTS people.users ("
                     + "username VARCHAR(50) PRIMARY KEY, "
-                    + "password VARCHAR(200));");
-            stmt.executeUpdate("INSERT IGNORE INTO people.users VALUES ('admin', 'admin123');");
+                    + "user_password VARCHAR(200),"
+                    + "isAdmin BOOLEAN DEFAULT FALSE);");
+
+            stmt.executeUpdate("INSERT IGNORE INTO people.users (username, user_password, isAdmin) VALUES ('admin', 'admin123', true);");
+            stmt.executeUpdate("INSERT IGNORE INTO people.users (username, user_password, isAdmin) VALUES ('user', 'user123', false);");
             stmt.close();
             conn.close();
         } catch (SQLException ex) {
             JOptionPane.showMessageDialog(null, "Error creating users table.", "Error", JOptionPane.ERROR_MESSAGE);
+            System.out.println(ex.getMessage());
             System.exit(0);
         }
     }
@@ -275,44 +282,63 @@ public class ControllerImplementation implements IController, ActionListener {
     }
 
     private void setupMenu() {
-        menu = new Menu();
-        menu.setVisible(true);
-        menu.getInsert().addActionListener(this);
-        menu.getRead().addActionListener(this);
-        menu.getUpdate().addActionListener(this);
-        menu.getDelete().addActionListener(this);
-        menu.getReadAll().addActionListener(this);
-        menu.getDeleteAll().addActionListener(this);
-        menu.getCount().addActionListener(this);
+        try {
+            // if !user.isAdmin() setVisible(false) insert, delete, update, deleteAll
+
+            menu = new Menu();
+
+            DAOLogin daoLogin = new DAOLogin();
+
+            menu.setVisible(true);
+            if (!daoLogin.isAdmin(login.getUsername())) {
+
+                menu.getDeleteAll().setVisible(false);
+                menu.getDelete().setVisible(false);
+                menu.getInsert().setVisible(false);
+                menu.getUpdate().setVisible(false);
+            }
+
+            menu.getInsert().addActionListener(this);
+            menu.getRead().addActionListener(this);
+            menu.getUpdate().addActionListener(this);
+            menu.getDelete().addActionListener(this);
+            menu.getReadAll().addActionListener(this);
+            menu.getDeleteAll().addActionListener(this);
+            menu.getCount().addActionListener(this);
+        } catch (SQLException ex) {
+            System.out.println(ex.getMessage());
+        }
     }
 
     private void handleLoginValidation() {
         try {
             DAOLogin daoLogin = new DAOLogin();
-            if (daoLogin.validate(login.getUsername(), login.getPassword())) {
+            User user = new User(login.getUsername(), login.getPassword());
+
+            if (daoLogin.validate(user.getUsername(), login.getPassword()) != null) {
                 loginSuccess = true;
-                 JOptionPane.showMessageDialog(login, "Login successful! Welcome " + login.getUsername(), "Login", JOptionPane.INFORMATION_MESSAGE);
+                JOptionPane.showMessageDialog(login, "Login successful! Welcome " + login.getUsername(), "Login", JOptionPane.INFORMATION_MESSAGE);
                 login.dispose();
             } else {
                 JOptionPane.showMessageDialog(login, "Invalid username or password.", "Login", JOptionPane.ERROR_MESSAGE);
             }
-        } catch (SQLException ex) {
+        } catch (SQLException | UserExceptionDAO ex) {
             JOptionPane.showMessageDialog(login, ex.getMessage(), "Login", JOptionPane.ERROR_MESSAGE);
             System.exit(0);
         }
     }
 
     private void handleLogin() {
-         login = new Login(null, true);
-    login.getLogin().addActionListener(this);
-    login.getCancel().addActionListener(this);
-    login.addWindowListener(new java.awt.event.WindowAdapter() {
-        @Override
-        public void windowClosing(java.awt.event.WindowEvent e) {
-            System.exit(0);
-        }
-    });
-    login.setVisible(true);
+        login = new Login(null, true);
+        login.getLogin().addActionListener(this);
+        login.getCancel().addActionListener(this);
+        login.addWindowListener(new java.awt.event.WindowAdapter() {
+            @Override
+            public void windowClosing(java.awt.event.WindowEvent e) {
+                System.exit(0);
+            }
+        });
+        login.setVisible(true);
     }
 
     private void handleInsertAction() {

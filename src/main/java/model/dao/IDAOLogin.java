@@ -5,12 +5,14 @@
 package model.dao;
 
 import java.sql.SQLException;
+import model.entity.User;
+import model.entity.UserExceptionDAO;
 
 /**
  *
  * @author Estudio-Trabajo
  */
 public interface IDAOLogin {
-     boolean validate(String username, String password) throws SQLException;
+     User validate(String username, String password) throws SQLException, UserExceptionDAO;
     
 }
