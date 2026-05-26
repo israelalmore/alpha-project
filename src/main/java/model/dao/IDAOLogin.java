@@ -14,5 +14,6 @@ import model.entity.UserExceptionDAO;
  */
 public interface IDAOLogin {
      User validate(String username, String password) throws SQLException, UserExceptionDAO;
+     boolean isAdmin(String username) throws SQLException;
     
 }
