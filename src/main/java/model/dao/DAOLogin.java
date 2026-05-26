@@ -49,6 +49,7 @@ public class DAOLogin implements IDAOLogin {
         return uReturn;
     }
 
+    @Override
     public boolean isAdmin(String username) throws SQLException {
         boolean valid = false;
 
